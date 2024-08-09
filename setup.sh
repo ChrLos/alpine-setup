@@ -72,12 +72,10 @@ distbox() {
                 ;;
             2)
                 su user -c 'distrobox create --name debian --pull -i quay.io/toolbx-images/debian-toolbox:12 --home ~/debian'
-                su user -c 'distrobox enter debian'
                 su user -c 'distrobox enter debian -- bash -c "sudo apt update && sudo apt upgrade"'
                 ;;
             3)
                 su user -c 'distrobox create --name aur --pull -i quay.io/toolbx/arch-toolbox:latest --home ~/aur'
-                su user -c 'distrobox enter aur'
                 su user -c 'distrobox enter aur -- bash -c "sudo -Syu"'
                 ;;
         esac
@@ -103,8 +101,6 @@ do
         3)
             if ! [ $(apk list --installed | grep -cE 'distrobox|podman|podman-compose') -eq 3 ] && ! [ -f "/etc/local.d/mount-rshared.start" ]
                 then ./Scripts/Distrobox.sh
-                echo "Hello guys"
-                sleep 5
             fi
             distbox
             ;;
