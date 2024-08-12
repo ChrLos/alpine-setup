@@ -10,8 +10,13 @@ rc-update add elogind
 rc-service elogind start
 
 # Changing Screen Resolution
-DISPLAYID=$(xrandr | grep " connected" | cut -d' ' -f1)
-su user -c 'xrandr --output $DISPLAYID --mode 1920x1080'
+#DISPLAYID=$(xrandr | grep " connected" | cut -d' ' -f1)
+#su user -c 'xrandr --output $DISPLAYID --mode 1920x1080'
 
 # Changing icons
-su user -c 'echo "icon_theme=Papirus\ntheme=KDE-Plasma\n[Qt]\nfont=\"Cantarell,11,-1,5,400,0,0,0,0,0,0,0,0,0,0,1\"" >> ~/.config/lxqt/lxqt.conf'
+cat <<EOL >> /home/user/.config/lxqt/lxqt.conf
+icon_theme=Papirus
+theme=KDE-Plasma
+[Qt]
+font=\"Cantarell,11,-1,5,400,0,0,0,0,0,0,0,0,0,0,1\"
+EOL
