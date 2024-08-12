@@ -8,3 +8,10 @@ setup-devd udev
 rc-update add sddm
 rc-update add elogind
 rc-service elogind start
+
+# Changing Screen Resolution
+DISPLAYID=$(xrandr | grep " connected" | cut -d' ' -f1)
+xrandr --output $DISPLAYID --mode 1920x1080
+
+# Changing icons
+echo "icon_theme=Papirus\ntheme=KDE-Plasma\n[Qt]\nfont=\"Cantarell,11,-1,5,400,0,0,0,0,0,0,0,0,0,0,1\"" >> ~/.config/lxqt/lxqt.conf
