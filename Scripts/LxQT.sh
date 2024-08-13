@@ -14,9 +14,11 @@ rc-service elogind start
 #su user -c 'xrandr --output $DISPLAYID --mode 1920x1080'
 
 # Changing icons
-cat <<EOL >> /home/user/.config/lxqt/lxqt.conf
+cat > /home/user/.config/lxqt/lxqt.conf <<EOF
+[General]
+__userfile__=true
 icon_theme=Papirus
 theme=KDE-Plasma
 [Qt]
 font=\"Cantarell,11,-1,5,400,0,0,0,0,0,0,0,0,0,0,1\"
-EOL
+EOF

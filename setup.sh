@@ -72,7 +72,7 @@ distbox() {
                 ;;
             2)
                 su user -c 'distrobox create --name debian --pull -i quay.io/toolbx-images/debian-toolbox:12 --home ~/debian'
-                su user -c 'distrobox enter debian -- bash -c "sudo apt update && sudo apt upgrade"'
+                su user -c 'distrobox enter debian -- bash -c "sudo apt update && sudo apt upgrade && sudo apt install lsb-release"'
                 ;;
             3)
                 su user -c 'distrobox create --name aur --pull -i quay.io/toolbx/arch-toolbox:latest --home ~/aur'
