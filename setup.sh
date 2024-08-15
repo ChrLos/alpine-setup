@@ -1,7 +1,7 @@
 #!/bin/bash
 
 apk update && apk upgrade
-apk add dialog bash
+apk add dialog
 clear
 
 if [ `id -u` -ne 0 ]
