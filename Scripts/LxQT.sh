@@ -14,6 +14,7 @@ rc-service elogind start
 #su user -c 'xrandr --output $DISPLAYID --mode 1920x1080'
 
 # Changing icons
+mkdir -p /home/user/.config/lxqt/
 cat > /home/user/.config/lxqt/lxqt.conf <<EOF
 [General]
 __userfile__=true
