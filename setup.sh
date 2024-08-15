@@ -13,7 +13,8 @@ ubun() {
     ubun_cmd=(dialog --separate-output --title "Additional Packages" --backtitle "Additional Packages for Ubuntu" --checklist "Select options:" 15 50 5)
     ubun_options=(1 "Mullvad Browser" off
             2 "Brave" off
-            3 "VsCode" off)
+            3 "VsCode" off
+            4 "Tor Browser" off)
     ubun_choices=$("${ubun_cmd[@]}" "${ubun_options[@]}" 2>&1 >/dev/tty)
     clear
 
@@ -49,6 +50,13 @@ EOF
 
                 chmod +x /tmp/vscode.sh
                 su user -c /tmp/vscode.sh
+                ;;
+            4)
+                cat > /tmp/torbrowser.sh << EOF
+                #!/bin/bash
+                distrobox enter ubuntu -- bash -c 'sudo apt-get install torbrowser-launcher'
+                distrobox enter ubuntu -- distrobox-export --app torbrowser-launcher
+EOF
                 ;;
         esac
     done
