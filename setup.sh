@@ -14,9 +14,6 @@ get_user() {
             echo -e "\$USER=$user" >> .variables
         fi
     fi
-
-    echo $user
-    sleep 25
 }
 
 root_check() {
