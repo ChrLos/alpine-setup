@@ -13,7 +13,7 @@ rc-service elogind start
 #DISPLAYID=$(xrandr | grep " connected" | cut -d' ' -f1)
 #su user -c 'xrandr --output $DISPLAYID --mode 1920x1080'
 
-# Changing icons
+# Changing icons and themes
 su user -c 'mkdir -p /home/user/.config/lxqt/'
 cat > /home/user/.config/lxqt/lxqt.conf <<EOF
 [General]

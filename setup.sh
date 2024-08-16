@@ -4,14 +4,28 @@ apk update && apk upgrade
 apk add dialog
 clear
 
-if [ `id -u` -ne 0 ]
-    then echo "Please run this script as root or use sudo!"
-    exit
-fi
+get_user() {
+    readarray -t lines < .variables
+    user=${lines[0]}
+
+    if [[ "${lines[0]}" != "\$USER="* ]]; then
+        user=$(dialog --title "Your user name" --inputbox "Enter your user name:" 10 50 "user" 3>&1 1>&2 2>&3)
+        echo -e "\$USER=$user" >> .variables
+    fi
+}
+
+root_check() {
+    if [ `id -u` -ne 0 ]; then
+        echo "Please run this script as root or use sudo!"
+        exit
+    fi
+}
 
 deb_based() {
-    su user -c 'distrobox enter $DISTRO -- bash -c "sudo apt update && sudo apt upgrade && sudo apt install lsb-release"'
-    deb_based_cmd=(dialog --separate-output --title "Additional Packages" --backtitle "Additional Packages for $DISTRO" --checklist "Select options:" 15 50 5)
+    DISTRO_NAME=$(echo "$DISTRO" | awk '{for (i=1; i<=NF; i++) $i=toupper(substr($i,1,1)) tolower(substr($i,2)); print}')
+
+    su $user -c 'distrobox enter $DISTRO -- bash -c "sudo apt update && sudo apt upgrade && sudo apt install lsb-release"'
+    deb_based_cmd=(dialog --separate-output --title "Additional Packages" --backtitle "Additional Packages for $DISTRO_NAME" --checklist "Select options:" 15 50 5)
     deb_based_options=(1 "Mullvad Browser" off
             2 "Brave" off
             3 "VsCode" off
@@ -30,7 +44,7 @@ deb_based() {
 EOF
 
                 chmod +x /tmp/mullvad.sh
-                su user -c /tmp/mullvad.sh
+                su $user -c /tmp/mullvad.sh
                 ;;
             2)
                 cat > /tmp/brave.sh << EOF
@@ -40,7 +54,7 @@ EOF
 EOF
 
                 chmod +x /tmp/brave.sh
-                su user -c /tmp/brave.sh
+                su $user -c /tmp/brave.sh
                 ;;
             3)
                 cat > /tmp/vscode.sh << EOF
@@ -50,12 +64,12 @@ EOF
 EOF
 
                 chmod +x /tmp/vscode.sh
-                su user -c /tmp/vscode.sh
+                su $user -c /tmp/vscode.sh
                 ;;
             4)
                 cat > /tmp/torbrowser.sh << EOF
                 #!/bin/bash
-                distrobox enter $DISTRO -- bash -c 'sudo apt-get install torbrowser-launcher'
+                distrobox enter $DISTRO -- bash -c 'sudo apt-get install -y torbrowser-launcher'
                 distrobox enter $DISTRO -- distrobox-export --app torbrowser-launcher
 EOF
                 ;;
@@ -75,22 +89,25 @@ distbox() {
     do
         case $distro_choice in
             1)
-                su user -c 'distrobox create --name ubuntu --image ubuntu --home ~/ubuntu'
                 export DISTRO="ubuntu"
+                su $user -c 'distrobox create --name $DISTRO --image ubuntu --home ~/$DISTRO'
                 deb_based
                 ;;
             2)
-                su user -c 'distrobox create --name debian --pull -i quay.io/toolbx-images/debian-toolbox:12 --home ~/debian'
                 export DISTRO="debian"
+                su $user -c 'distrobox create --name $DISTRO --pull -i quay.io/toolbx-images/debian-toolbox:12 --home ~/$DISTRO'
                 deb_based
                 ;;
             3)
-                su user -c 'distrobox create --name aur --pull -i quay.io/toolbx/arch-toolbox:latest --home ~/aur'
-                su user -c 'distrobox enter aur -- bash -c "sudo -Syu"'
+                su $user -c 'distrobox create --name aur --pull -i quay.io/toolbx/arch-toolbox:latest --home ~/aur'
+                su $user -c 'distrobox enter aur -- bash -c "sudo -Syu"'
                 ;;
         esac
     done
 }
+
+get_user
+root_check
 
 cmd=(dialog --separate-output --title "Alpine Setup" --backtitle "Alpine Linux Interactive Installer" --checklist "Select options:" 15 50 5)
 options=(1 "Pipewire Setup" off    # any option can be set to default to "on"
@@ -109,8 +126,8 @@ do
             ./Scripts/LxQT.sh
             ;;
         3)
-            if ! [ $(apk list --installed | grep -cE 'distrobox|podman|podman-compose') -eq 3 ] && ! [ -f "/etc/local.d/mount-rshared.start" ]
-                then ./Scripts/Distrobox.sh
+            if ! [ $(apk list --installed | grep -cE 'distrobox|podman|podman-compose') -eq 3 ] && ! [ -f "/etc/local.d/mount-rshared.start" ]; then
+                ./Scripts/Distrobox.sh
                 reboot
             fi
             distbox
