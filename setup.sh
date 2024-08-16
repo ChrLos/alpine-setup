@@ -6,12 +6,17 @@ clear
 
 get_user() {
     readarray -t lines < .variables
-    user=${lines[0]}
+    user=${lines[0]#\$USER=}
 
-    if [[ "${lines[0]}" != "\$USER="* ]]; then
+    if [[ ${lines[0]} != "\$USER="* ]]; then
         user=$(dialog --title "Your user name" --inputbox "Enter your user name:" 10 50 "user" 3>&1 1>&2 2>&3)
-        echo -e "\$USER=$user" >> .variables
+        if [[ $user != "" ]]; then
+            echo -e "\$USER=$user" >> .variables
+        fi
     fi
+
+    echo $user
+    sleep 25
 }
 
 root_check() {
