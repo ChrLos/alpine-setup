@@ -2,6 +2,13 @@
 
 apk add dialog
 
+root_check() {
+    if [ `id -u` -ne 0 ]; then
+        echo "Please run this script as root or use sudo!"
+        exit
+    fi
+}
+
 get_user() {
     readarray -t lines < .variables
     user=${lines[0]#\$USER=}
@@ -14,11 +21,18 @@ get_user() {
     fi
 }
 
-root_check() {
-    if [ `id -u` -ne 0 ]; then
-        echo "Please run this script as root or use sudo!"
-        exit
-    fi
+edge_releases() {
+    dialog --title "Edge Releases" --yesno "Do you want Edge releases?\n\nWARNING:PROCEED WITH CAUTION\nThis will turn the lastest release. bugs, errors, or security vulnerabilities can frequently occur" 9 60
+    response=$?
+    case $response in
+        0)
+            sed -i -e 's/http/https/g' /etc/apk/repositories
+            sed -i -e 's/v3.20/edge/g' /etc/apk/repositories
+            ;;
+        255)
+            exit
+            ;;
+    esac
 }
 
 deb_based() {
@@ -109,8 +123,8 @@ distbox() {
 mainpage() {
     apk update && apk upgrade
 
-    cmd=(dialog --separate-output --title "Alpine Setup" --backtitle "Alpine Linux Interactive Installer" --checklist "Select options:" 15 50 5)
-    options=(1 "Initial Setup" off
+    cmd=(dialog --separate-output --title "Alpine Setup" --backtitle "Alpine Linux Interactive Installer" --checklist "Select options:" 15 65 5)
+    options=(1 "Initial Setup (run if u just did alpine-setup)" off
             2 "Pipewire Setup" off    # any option can be set to default to "on"
             3 "LxQt DE" off
             4 "Distrobox" off)
@@ -121,11 +135,11 @@ mainpage() {
     do
         case $choice in
             1)
-                apk add doas
+                apk add doas nano vim sudo
                 adduser $user wheel
                 su $user -c 'doas passwd -l root'
-                su $user -c "doas sed -i -e 's/#http/http/g' /etc/apk/repositories"
-                su $user -c "doas apk update"
+                sed -i -e 's/#http/http/g' /etc/apk/repositories
+                apk update
                 ;;
             2)
                 ./Scripts/pipewire-setup.sh
@@ -142,20 +156,6 @@ mainpage() {
                 ;;
         esac
     done
-}
-
-edge_releases() {
-    dialog --title "Edge Releases" --yesno "Do you want Edge releases?\n\nWARNING:PROCEED WITH CAUTION\nThis will turn the lastest release. bugs, errors, or security vulnerabilities can frequently occur" 9 60
-    response=$?
-    case $response in
-        0)
-            sed -i -e 's/http/https/g' /etc/apk/repositories
-            sed -i -e 's/v3.20/edge/g' /etc/apk/repositories
-            ;;
-        255)
-            exit
-            ;;
-    esac
 }
 
 root_check
