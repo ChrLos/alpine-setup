@@ -22,7 +22,6 @@ get_user() {
 }
 
 move_location() {
-    echo "$user"
     if ! [[ $(ls /home/$user/ | grep -cE "alpine-setup") -eq 1 ]]; then
         dialog --title "Do you want to move it?" --yesno "Your alpine-setup is not in /home/$user, do you want to move it?" 9 60
         response=$?
@@ -152,7 +151,7 @@ mainpage() {
     apk update && apk upgrade
 
     cmd=(dialog --separate-output --title "Alpine Setup" --backtitle "Alpine Linux Interactive Installer" --checklist "Select options:" 15 65 5)
-    options=(1 "Initial Setup (run if u just did alpine-setup)" off
+    options=(1 "Initial Setup (run if u just did setup-alpine)" off
             2 "Pipewire Setup" off    # any option can be set to default to "on"
             3 "LxQt DE" off
             4 "Distrobox" off)
