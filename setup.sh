@@ -1,8 +1,6 @@
 #!/bin/bash
 
-apk update && apk upgrade
 apk add dialog
-clear
 
 get_user() {
     readarray -t lines < .variables
@@ -108,31 +106,59 @@ distbox() {
     done
 }
 
-get_user
-root_check
+mainpage() {
+    apk update && apk upgrade
 
-cmd=(dialog --separate-output --title "Alpine Setup" --backtitle "Alpine Linux Interactive Installer" --checklist "Select options:" 15 50 5)
-options=(1 "Pipewire Setup" off    # any option can be set to default to "on"
-         2 "LxQt DE" off
-         3 "Distrobox" off)
-choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
-clear
+    cmd=(dialog --separate-output --title "Alpine Setup" --backtitle "Alpine Linux Interactive Installer" --checklist "Select options:" 15 50 5)
+    options=(1 "Initial Setup" off
+            2 "Pipewire Setup" off    # any option can be set to default to "on"
+            3 "LxQt DE" off
+            4 "Distrobox" off)
+    choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
+    clear
 
-for choice in $choices
-do
-    case $choice in
-        1)
-            ./Scripts/pipewire-setup.sh
+    for choice in $choices
+    do
+        case $choice in
+            1)
+                apk add doas
+                adduser $user wheel
+                su $user -c 'doas passwd -l root'
+                su $user -c "doas sed -i -e 's/#http/http/g' /etc/apk/repositories"
+                su $user -c "doas apk update"
+                ;;
+            2)
+                ./Scripts/pipewire-setup.sh
+                ;;
+            3)
+                ./Scripts/LxQT.sh
+                ;;
+            4)
+                if ! [ $(apk list --installed | grep -cE 'distrobox|podman|podman-compose') -eq 3 ] && ! [ -f "/etc/local.d/mount-rshared.start" ]; then
+                    ./Scripts/Distrobox.sh
+                    reboot
+                fi
+                distbox
+                ;;
+        esac
+    done
+}
+
+edge_releases() {
+    dialog --title "Edge Releases" --yesno "Do you want Edge releases?\n\nWARNING:PROCEED WITH CAUTION\nThis will turn the lastest release. bugs, errors, or security vulnerabilities can frequently occur" 9 60
+    response=$?
+    case $response in
+        0)
+            sed -i -e 's/http/https/g' /etc/apk/repositories
+            sed -i -e 's/v3.20/edge/g' /etc/apk/repositories
             ;;
-        2)
-            ./Scripts/LxQT.sh
-            ;;
-        3)
-            if ! [ $(apk list --installed | grep -cE 'distrobox|podman|podman-compose') -eq 3 ] && ! [ -f "/etc/local.d/mount-rshared.start" ]; then
-                ./Scripts/Distrobox.sh
-                reboot
-            fi
-            distbox
+        255)
+            exit
             ;;
     esac
-done
+}
+
+root_check
+edge_releases
+get_user
+mainpage
