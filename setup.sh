@@ -21,6 +21,23 @@ get_user() {
     fi
 }
 
+move_location() {
+    echo "$user"
+    if ! [[ $(ls /home/$user/ | grep -cE "alpine-setup") -eq 1 ]]; then
+        dialog --title "Do you want to move it?" --yesno "Your alpine-setup is not in /home/$user, do you want to move it?" 9 60
+        response=$?
+        case $response in
+            0)
+                su $user -c "cp -r ../alpine-setup /home/$user/alpine-setup"
+                move_loc=1
+                ;;
+            255)
+                exit
+                ;;
+        esac
+    fi
+}
+
 edge_releases() {
     dialog --title "Edge Releases" --yesno "Do you want Edge releases?\n\nWARNING:PROCEED WITH CAUTION\nThis will turn the lastest release. bugs, errors, or security vulnerabilities can frequently occur" 9 60
     response=$?
@@ -33,6 +50,16 @@ edge_releases() {
             exit
             ;;
     esac
+}
+
+final_check() {
+    if [ $move_loc -eq 1 ]; then
+        rm -rf ../alpine-setup
+    fi
+
+    if [ $reboot_value -eq 1 ]; then
+        reboot
+    fi
 }
 
 deb_based() {
@@ -150,7 +177,8 @@ mainpage() {
             4)
                 if ! [ $(apk list --installed | grep -cE 'distrobox|podman|podman-compose') -eq 3 ] && ! [ -f "/etc/local.d/mount-rshared.start" ]; then
                     ./Scripts/Distrobox.sh
-                    reboot
+                    reboot_value=1
+                    final_check
                 fi
                 distbox
                 ;;
@@ -161,4 +189,6 @@ mainpage() {
 root_check
 edge_releases
 get_user
+move_location
 mainpage
+final_check
