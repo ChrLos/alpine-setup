@@ -11,10 +11,10 @@ root_check() {
 
 get_user() {
     readarray -t lines < .variables
-    user=${lines[0]#\$USER=}
+    export user=${lines[0]#\$USER=}
 
     if [[ ${lines[0]} != "\$USER="* ]]; then
-        user=$(dialog --title "Your user name" --inputbox "Enter your user name:" 10 50 "user" 3>&1 1>&2 2>&3)
+        export user=$(dialog --title "Your user name" --inputbox "Enter your user name:" 10 50 "user" 3>&1 1>&2 2>&3)
         if [[ $user != "" ]]; then
             echo -e "\$USER=$user" >> .variables
         fi
@@ -28,7 +28,8 @@ move_location() {
         response=$?
         case $response in
             0)
-                su $user -c "cp -r ../alpine-setup /home/$user/alpine-setup"
+                cp -r ../alpine-setup /home/$user/alpine-setup
+                chown $user:$user /home/$user/alpine-setup
                 move_loc=1
                 ;;
             255)
@@ -53,11 +54,11 @@ edge_releases() {
 }
 
 final_check() {
-    if [ $move_loc -eq 1 ]; then
+    if [[ $move_loc -eq 1 ]]; then
         rm -rf ../alpine-setup
     fi
 
-    if [ $reboot_value -eq 1 ]; then
+    if [[ $reboot_value -eq 1 ]]; then
         reboot
     fi
 }

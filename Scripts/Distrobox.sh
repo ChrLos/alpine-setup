@@ -5,8 +5,8 @@ rc-update add cgroups
 rc-service cgroups start
 modprobe tun
 echo tun >>/etc/modules
-echo user:100000:65536 >/etc/subuid
-echo user:100000:65536 >/etc/subgid
+echo $user:100000:65536 >/etc/subuid
+echo $user:100000:65536 >/etc/subgid
 
 cat > /etc/local.d/mount-rshared.start << EOF
 #!/bin/sh

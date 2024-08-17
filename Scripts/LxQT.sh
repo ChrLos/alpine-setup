@@ -23,4 +23,4 @@ theme=KDE-Plasma
 [Qt]
 font=\"Cantarell,11,-1,5,400,0,0,0,0,0,0,0,0,0,0,1\"
 EOF
-chown user:user /home/user/.config/lxqt/lxqt.conf
+chown $user:$user /home/user/.config/lxqt/lxqt.conf

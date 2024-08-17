@@ -1,4 +1,4 @@
 #!/bin/sh
 
-addgroup user audio
+addgroup $user audio
 apk add pipewire wireplumber pipewire-pulse
