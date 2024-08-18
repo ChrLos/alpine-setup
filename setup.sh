@@ -165,7 +165,7 @@ mainpage() {
                 apk add doas nano vim sudo
                 adduser $user wheel
                 su $user -c 'doas passwd -l root'
-                sed -i -e 's/#http/http/g' /etc/apk/repositories
+                sed -i -e '/\/\v3.20\// s/^#//' /etc/apk/repositories
                 apk update
                 ;;
             2)
@@ -187,7 +187,9 @@ mainpage() {
 }
 
 root_check
-edge_releases
+if ! [[ $(cat /etc/apk/repositories | grep -cE "^http.*/edge/") -ge 1 ]]; then
+    edge_releases
+fi
 get_user
 move_location
 mainpage
