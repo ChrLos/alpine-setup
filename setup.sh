@@ -43,6 +43,7 @@ edge_releases() {
     response=$?
     case $response in
         0)
+            sed -i -e '/\/\v3.20\// s/^#//' /etc/apk/repositories
             sed -i -e 's/http/https/g' /etc/apk/repositories
             sed -i -e 's/v3.20/edge/g' /etc/apk/repositories
             ;;
@@ -162,10 +163,10 @@ mainpage() {
     do
         case $choice in
             1)
+                sed -i -e '/\/\v3.20\// s/^#//' /etc/apk/repositories
                 apk add doas nano vim sudo
                 adduser $user wheel
                 su $user -c 'doas passwd -l root'
-                sed -i -e '/\/\v3.20\// s/^#//' /etc/apk/repositories
                 apk update
                 ;;
             2)
