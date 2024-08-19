@@ -114,6 +114,9 @@ EOF
                 distrobox enter $DISTRO -- bash -c 'sudo apt-get install -y torbrowser-launcher'
                 distrobox enter $DISTRO -- distrobox-export --app torbrowser-launcher
 EOF
+
+                chmod +x /tmp/torbrowser.sh
+                su $user -c /tmp/torbrowser.sh
                 ;;
         esac
     done
