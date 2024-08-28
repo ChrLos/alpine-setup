@@ -168,7 +168,7 @@ mainpage() {
                 sed -i -e '/\/\v3.20\// s/^#//' /etc/apk/repositories
                 apk add doas nano vim sudo
                 adduser $user wheel
-                doas passwd -l root
+                passwd -l root
                 apk update
                 ;;
             2)
