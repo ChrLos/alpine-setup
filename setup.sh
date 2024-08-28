@@ -1,6 +1,6 @@
 #!/bin/bash
 
-apk add dialog btop
+apk add dialog
 alpineversion=$(cat /etc/alpine-release | cut -d "." -f 1-2 | awk '{print "v"$1}')
 
 root_check() {
@@ -41,9 +41,9 @@ edge_releases() {
     response=$?
     case $response in
         0)
-            sed -i -e '/\/$alpineversion\// s/^#//' /etc/apk/repositories
-            sed -i -e 's/http:/https:/g' /etc/apk/repositories
-            sed -i -e 's/$alpineversion/edge/g' /etc/apk/repositories
+            sed -i -e "/\/$alpineversion\// s/^#//" /etc/apk/repositories
+            sed -i -e "s/http:/https:/g" /etc/apk/repositories
+            sed -i -e "s/$alpineversion/edge/g" /etc/apk/repositories
             ;;
         255)
             exit
@@ -164,8 +164,8 @@ mainpage() {
     do
         case $choice in
             1)
-                sed -i -e '/\/$alpineversion\// s/^#//' /etc/apk/repositories
-                apk add doas nano vim sudo
+                sed -i -e "/\/$alpineversion\// s/^#//" /etc/apk/repositories
+                apk add doas nano vim sudo nvim btop
                 adduser $user wheel
                 passwd -l root
                 apk update
