@@ -1,6 +1,7 @@
 #!/bin/bash
 
-apk add dialog
+apk add dialog btop
+alpineversion=$(cat /etc/alpine-release | cut -d "." -f 1-2 | awk '{print "v"$1}')
 
 root_check() {
     if [ `id -u` -ne 0 ]; then
@@ -25,7 +26,7 @@ move_location() {
         case $response in
             0)
                 cp -r ../alpine-setup /home/$user/alpine-setup
-                chown $user:$user /home/$user/alpine-setup
+                chown -R $user:$user /home/$user/alpine-setup
                 move_loc=1
                 ;;
             255)
@@ -40,10 +41,8 @@ edge_releases() {
     response=$?
     case $response in
         0)
-            # Make a more dynamic version
-            alpineversion=$(cat /etc/alpine-release | cut -d "." -f 1-2 | awk '{print "v"$1}')
-            sed -i -e '/\/\$alpineversion\// s/^#//' /etc/apk/repositories
-            sed -i -e 's/http/https/g' /etc/apk/repositories
+            sed -i -e '/\/$alpineversion\// s/^#//' /etc/apk/repositories
+            sed -i -e 's/http:/https:/g' /etc/apk/repositories
             sed -i -e 's/$alpineversion/edge/g' /etc/apk/repositories
             ;;
         255)
@@ -165,7 +164,7 @@ mainpage() {
     do
         case $choice in
             1)
-                sed -i -e '/\/\v3.20\// s/^#//' /etc/apk/repositories
+                sed -i -e '/\/$alpineversion\// s/^#//' /etc/apk/repositories
                 apk add doas nano vim sudo
                 adduser $user wheel
                 passwd -l root
