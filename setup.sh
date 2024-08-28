@@ -10,14 +10,11 @@ root_check() {
 }
 
 get_user() {
-    readarray -t lines < .variables
-    export user=${lines[0]#\$USER=}
-
-    if [[ ${lines[0]} != "\$USER="* ]]; then
-        export user=$(dialog --title "Your user name" --inputbox "Enter your user name:" 10 50 "user" 3>&1 1>&2 2>&3)
-        if [[ $user != "" ]]; then
-            echo -e "\$USER=$user" >> .variables
-        fi
+    # The auto guess_name will need work if there's 2 users, make a dialog to select which user
+    if [[ $(grep -cE /home/ /etc/passwd) -gt 1 ]]; then
+        echo "Finish this later" #Continue pls
+    else
+        export user=$(grep /home/ /etc/passwd | awk -F':' '{print $1}')
     fi
 }
 
@@ -43,9 +40,11 @@ edge_releases() {
     response=$?
     case $response in
         0)
-            sed -i -e '/\/\v3.20\// s/^#//' /etc/apk/repositories
+            # Make a more dynamic version
+            alpineversion=$(cat /etc/alpine-release | cut -d "." -f 1-2 | awk '{print "v"$1}')
+            sed -i -e '/\/\$alpineversion\// s/^#//' /etc/apk/repositories
             sed -i -e 's/http/https/g' /etc/apk/repositories
-            sed -i -e 's/v3.20/edge/g' /etc/apk/repositories
+            sed -i -e 's/$alpineversion/edge/g' /etc/apk/repositories
             ;;
         255)
             exit
@@ -169,7 +168,7 @@ mainpage() {
                 sed -i -e '/\/\v3.20\// s/^#//' /etc/apk/repositories
                 apk add doas nano vim sudo
                 adduser $user wheel
-                su $user -c 'doas passwd -l root'
+                doas passwd -l root
                 apk update
                 ;;
             2)
@@ -183,8 +182,9 @@ mainpage() {
                     ./Scripts/Distrobox.sh
                     reboot_value=1
                     final_check
+                else
+                    distbox
                 fi
-                distbox
                 ;;
         esac
     done
@@ -198,3 +198,18 @@ get_user
 move_location
 mainpage
 final_check
+
+
+# Archived Code
+# get_user() {
+#     # The auto guess_name will need work if there's 2 users, make a dialog to select which user
+#     readarray -t lines < .variables
+#     export user=${lines[0]#\$USER=}
+
+#     if [[ ${lines[0]} != "\$USER="* ]]; then
+#         export user=$(dialog --title "Your user name" --inputbox "Enter your user name:" 10 50 "user" 3>&1 1>&2 2>&3)
+#         if [[ $user != "" ]]; then
+#             echo -e "\$USER=$user" >> .variables
+#         fi
+#     fi
+# }
