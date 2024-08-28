@@ -165,7 +165,7 @@ mainpage() {
         case $choice in
             1)
                 sed -i -e "/\/$alpineversion\// s/^#//" /etc/apk/repositories
-                apk add doas nano vim sudo nvim btop
+                apk add doas nano vim sudo neovim btop
                 adduser $user wheel
                 passwd -l root
                 apk update
