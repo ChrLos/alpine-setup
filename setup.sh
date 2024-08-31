@@ -1,7 +1,7 @@
 #!/bin/bash
 
 apk add dialog
-alpineversion=$(cat /etc/alpine-release | cut -d "." -f 1-2 | awk '{print "v"$1}')
+export alpineversion=$(cat /etc/alpine-release | cut -d "." -f 1-2 | awk '{print "v"$1}')
 
 root_check() {
     if [ `id -u` -ne 0 ]; then
@@ -61,132 +61,81 @@ final_check() {
     fi
 }
 
-deb_based() {
-    DISTRO_NAME=$(echo "$DISTRO" | awk '{for (i=1; i<=NF; i++) $i=toupper(substr($i,1,1)) tolower(substr($i,2)); print}')
+programchoices() {
+    choices=()
+    dynamic_choice=()
+    ((i = 0))
+    dynamic_choice+="case \$pickings in\n"
 
-    su $user -c 'distrobox enter $DISTRO -- bash -c "sudo apt update && sudo apt upgrade && sudo apt install lsb-release"'
-    deb_based_cmd=(dialog --separate-output --title "Additional Packages" --backtitle "Additional Packages for $DISTRO_NAME" --checklist "Select options:" 15 50 5)
-    deb_based_options=(1 "Mullvad Browser" off
-            2 "Brave" off
-            3 "VsCode" off
-            4 "Tor Browser" off)
-    deb_based_choices=$("${deb_based_cmd[@]}" "${deb_based_options[@]}" 2>&1 >/dev/tty)
-    clear
-
-    for deb_based_choice in $deb_based_choices
+    for ((p = 0; p < ${#checkboxes[@]}; p+=2))
     do
-        case $deb_based_choice in
-            1)
-                cat > /tmp/mullvad.sh << EOF
-                #!/bin/bash
-                distrobox enter $DISTRO -- bash -c 'sudo curl -fsSLo /usr/share/keyrings/mullvad-keyring.asc https://repository.mullvad.net/deb/mullvad-keyring.asc && echo "deb [signed-by=/usr/share/keyrings/mullvad-keyring.asc arch=\$( dpkg --print-architecture )] https://repository.mullvad.net/deb/stable \$(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/mullvad.list && sudo apt update && sudo apt install -y mullvad-browser'
-                distrobox enter $DISTRO -- distrobox-export --app mullvad-browser
-EOF
-
-                chmod +x /tmp/mullvad.sh
-                su $user -c /tmp/mullvad.sh
-                ;;
-            2)
-                cat > /tmp/brave.sh << EOF
-                #!/bin/bash
-                distrobox enter $DISTRO -- bash -c 'sudo apt install curl && sudo curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg && echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main"|sudo tee /etc/apt/sources.list.d/brave-browser-release.list && sudo apt update && sudo apt install -y brave-browser'
-                distrobox enter $DISTRO -- distrobox-export --app brave-browser
-EOF
-
-                chmod +x /tmp/brave.sh
-                su $user -c /tmp/brave.sh
-                ;;
-            3)
-                cat > /tmp/vscode.sh << EOF
-                #!/bin/bash
-                distrobox enter $DISTRO -- bash -c 'sudo apt-get install wget gpg && wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg && sudo install -D -o root -g root -m 644 packages.microsoft.gpg /etc/apt/keyrings/packages.microsoft.gpg && echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" |sudo tee /etc/apt/sources.list.d/vscode.list > /dev/null &&rm -f packages.microsoft.gpg && sudo apt install apt-transport-https && sudo apt update && sudo apt install -y code'
-                distrobox enter $DISTRO -- distrobox-export --app code
-EOF
-
-                chmod +x /tmp/vscode.sh
-                su $user -c /tmp/vscode.sh
-                ;;
-            4)
-                cat > /tmp/torbrowser.sh << EOF
-                #!/bin/bash
-                distrobox enter $DISTRO -- bash -c 'sudo apt-get install -y torbrowser-launcher'
-                distrobox enter $DISTRO -- distrobox-export --app torbrowser-launcher
-EOF
-
-                chmod +x /tmp/torbrowser.sh
-                su $user -c /tmp/torbrowser.sh
-                ;;
-        esac
+        ((i+=1))
+        choices+=("${i}" "${checkboxes[p]}" "OFF")
+        dynamic_choice+="${i})\n${checkboxes[p+1]}\n;;\n"
     done
+
+    dynamic_choice+="esac"
+}
+
+mainui() {
+    cmd=(dialog --separate-output --title "$title" --backtitle "$backtitle" --checklist "Select options:" 15 65 5)
+    picking=$("${cmd[@]}" "${choices[@]}" 2>&1 >/dev/tty)
+}
+
+command() {
+    for pickings in $picking
+    do
+        eval "$(echo -e "$dynamic_choice")"
+    done
+}
+
+deb_based() {
+    source ./Scripts/Distrobox/deb_based.sh
+
+    DISTRO_NAME=$(echo "$DISTRO" | awk '{for (i=1; i<=NF; i++) $i=toupper(substr($i,1,1)) tolower(substr($i,2)); print}')
+    su $user -c 'distrobox enter $DISTRO -- bash -c "sudo apt update && sudo apt upgrade && sudo apt install lsb-release"'
+
+    title="Additional Packages"
+    backtitle="Additional Packages for $DISTRO_NAME"
+
+    local -a checkboxes
+    checkboxes+=("Mullvad Browser" "mullvad_browser")
+    checkboxes+=("Brave" "brave")
+    checkboxes+=("VsCode" "vscode")
+    checkboxes+=("Tor Browser" "tor_browser")
+
+    programchoices && mainui && command
 }
 
 distbox() {
-    distro_cmd=(dialog --separate-output --title "Distrobox OS" --backtitle "Choose your Distrobox OS" --checklist "Select options:" 15 50 5)
-    distro_options=(1 "Ubuntu" off
-            2 "Debian" off
-            3 "Arch Linux" off)
-    distro_choices=$("${distro_cmd[@]}" "${distro_options[@]}" 2>&1 >/dev/tty)
-    clear
+    source ./Scripts/Distrobox/distbox_os.sh
 
-    for distro_choice in $distro_choices
-    do
-        case $distro_choice in
-            1)
-                export DISTRO="ubuntu"
-                su $user -c 'distrobox create --name $DISTRO --image ubuntu --home ~/$DISTRO'
-                deb_based
-                ;;
-            2)
-                export DISTRO="debian"
-                su $user -c 'distrobox create --name $DISTRO --pull -i quay.io/toolbx-images/debian-toolbox:12 --home ~/$DISTRO'
-                deb_based
-                ;;
-            3)
-                su $user -c 'distrobox create --name aur --pull -i quay.io/toolbx/arch-toolbox:latest --home ~/aur'
-                su $user -c 'distrobox enter aur -- bash -c "sudo -Syu"'
-                ;;
-        esac
-    done
+    title="Distrobox OS"
+    backtitle="Choose your Distrobox OS"
+
+    local -a checkboxes
+    checkboxes+=("Ubuntu" "os_ubuntu")
+    checkboxes+=("Debian" "os_debian")
+    checkboxes+=("Arch Linux" "os_arch")
+
+    programchoices && mainui && command
 }
 
-mainpage() {
+homepage() {
+    source ./Scripts/homepage.sh
+    
     apk update && apk upgrade
 
-    cmd=(dialog --separate-output --title "Alpine Setup" --backtitle "Alpine Linux Interactive Installer" --checklist "Select options:" 15 65 5)
-    options=(1 "Initial Setup (run if u just did setup-alpine)" off
-            2 "Pipewire Setup" off    # any option can be set to default to "on"
-            3 "LxQt DE" off
-            4 "Distrobox" off)
-    choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
-    clear
+    title="Alpine Setup"
+    backtitle="Alpine Linux Interactive Installer"
 
-    for choice in $choices
-    do
-        case $choice in
-            1)
-                sed -i -e "/\/$alpineversion\// s/^#//" /etc/apk/repositories
-                apk add doas nano vim sudo neovim btop
-                adduser $user wheel
-                passwd -l root
-                apk update
-                ;;
-            2)
-                ./Scripts/pipewire-setup.sh
-                ;;
-            3)
-                ./Scripts/LxQT.sh
-                ;;
-            4)
-                if ! [ $(apk list --installed | grep -cE 'distrobox|podman|podman-compose') -eq 3 ] && ! [ -f "/etc/local.d/mount-rshared.start" ]; then
-                    ./Scripts/Distrobox.sh
-                    reboot_value=1
-                    final_check
-                else
-                    distbox
-                fi
-                ;;
-        esac
-    done
+    local -a checkboxes
+    checkboxes+=("Initial Setup" "initial_setup")
+    checkboxes+=("Pipewire Setup" "pipewire")
+    checkboxes+=("LxQt DE" "lxqt")
+    checkboxes+=("Distrobox" "distrobox")
+
+    programchoices && mainui && command
 }
 
 root_check
@@ -195,9 +144,8 @@ if ! [[ $(cat /etc/apk/repositories | grep -cE "^http.*/edge/") -ge 1 ]]; then
 fi
 get_user
 move_location
-mainpage
+homepage
 final_check
-
 
 # Archived Code
 # get_user() {
