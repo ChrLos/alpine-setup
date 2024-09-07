@@ -89,22 +89,47 @@ command() {
     done
 }
 
+browser() {
+    title="Browser"
+    backtitle="Browser to Install"
+
+    local -a checkboxes
+    checkboxes+=("Brave" "brow_brave")
+    checkboxes+=("Opera" "brow_opera")
+    checkboxes+=("Mullvad Browser" "brow_mullvad_browser")
+    checkboxes+=("Tor Browser" "brow_tor_browser")
+
+    programchoices && mainui && command
+}
+
+communication() {
+    title="Communication"
+    backtitle="Apps to Communicate"
+
+    local -a checkboxes
+    checkboxes+=("Discord" "com_discord")
+    checkboxes+=("SimpleX Chat" "com_simplex")
+
+    programchoices && mainui && command
+}
+
 deb_based() {
     source ./Scripts/Distrobox/deb_based.sh
 
-    DISTRO_NAME=$(echo "$DISTRO" | awk '{for (i=1; i<=NF; i++) $i=toupper(substr($i,1,1)) tolower(substr($i,2)); print}')
-    su $user -c 'distrobox enter $DISTRO -- bash -c "sudo apt update && sudo apt upgrade && sudo apt install lsb-release"'
+    export DISTRO_NAME=$(echo "$DISTRO" | awk '{for (i=1; i<=NF; i++) $i=toupper(substr($i,1,1)) tolower(substr($i,2)); print}')
+    su $user -c 'distrobox enter $DISTRO -- bash -c "sudo apt update && sudo apt upgrade && sudo apt install lsb-release pipewire wireplumber pipewire-pulse"'
 
     title="Additional Packages"
     backtitle="Additional Packages for $DISTRO_NAME"
 
     local -a checkboxes
-    checkboxes+=("Mullvad Browser" "mullvad_browser")
-    checkboxes+=("Brave" "brave")
+    checkboxes+=("Browser" "browser")
+    checkboxes+=("Communication" "communication")
     checkboxes+=("VsCode" "vscode")
-    checkboxes+=("Tor Browser" "tor_browser")
 
     programchoices && mainui && command
+
+    su $user -c 'distrobox enter $DISTRO -- bash -c "sudo dpkg --configure -a"'
 }
 
 distbox() {

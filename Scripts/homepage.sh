@@ -29,7 +29,7 @@ lxqt() {
 
     # Changing icons and themes
     su $user -c 'mkdir -p /home/$user/.config/lxqt/'
-    cat > /home/$user/.config/lxqt/lxqt.conf <<EOF
+    cat > /home/$user/.config/lxqt/lxqt.conf << EOF
     [General]
     __userfile__=true
     icon_theme=Papirus
