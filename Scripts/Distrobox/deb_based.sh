@@ -19,7 +19,7 @@ brow_opera() {
     distrobox enter $DISTRO -- bash -c 'wget -qO- https://deb.opera.com/archive.key | gpg --dearmor | sudo dd of=/usr/share/keyrings/opera-browser.gpg'
     distrobox enter $DISTRO -- bash -c 'echo "deb [signed-by=/usr/share/keyrings/opera-browser.gpg] https://deb.opera.com/opera-stable/ stable non-free" | sudo dd of=/etc/apt/sources.list.d/opera-archive.list'
     distrobox enter $DISTRO -- bash -c 'sudo apt-get update'
-    distrobox enter $DISTRO -- bash -c 'sudo apt-get install opera-stable'
+    distrobox enter $DISTRO -- bash -c 'sudo apt-get install opera-stable -y'
 EOF
 
     chmod +x /tmp/opera.sh

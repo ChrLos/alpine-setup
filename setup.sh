@@ -1,6 +1,7 @@
 #!/bin/bash
 
 apk add dialog
+((indicator = 0))
 export alpineversion=$(cat /etc/alpine-release | cut -d "." -f 1-2 | awk '{print "v"$1}')
 
 root_check() {
@@ -62,6 +63,7 @@ final_check() {
 }
 
 programchoices() {
+    ((indicator+=1))
     choices=()
     dynamic_choice=()
     ((i = 0))
@@ -75,17 +77,23 @@ programchoices() {
     done
 
     dynamic_choice+="esac"
+
+    declare -g "execute_$indicator=$dynamic_choice"
+    command_execute=execute_$indicator
 }
 
 mainui() {
     cmd=(dialog --separate-output --title "$title" --backtitle "$backtitle" --checklist "Select options:" 15 65 5)
     picking=$("${cmd[@]}" "${choices[@]}" 2>&1 >/dev/tty)
+
+    declare -g "picking_$indicator=$picking"
+    picking_testing=picking_$indicator
 }
 
 command() {
-    for pickings in $picking
+    for pickings in ${!picking_testing}
     do
-        eval "$(echo -e "$dynamic_choice")"
+        eval "$(echo -e "${!command_execute}")"
     done
 }
 
@@ -117,7 +125,7 @@ deb_based() {
     source ./Scripts/Distrobox/deb_based.sh
 
     export DISTRO_NAME=$(echo "$DISTRO" | awk '{for (i=1; i<=NF; i++) $i=toupper(substr($i,1,1)) tolower(substr($i,2)); print}')
-    su $user -c 'distrobox enter $DISTRO -- bash -c "sudo apt update && sudo apt upgrade && sudo apt install lsb-release pipewire wireplumber pipewire-pulse"'
+    su $user -c 'distrobox enter $DISTRO -- bash -c "sudo apt update -y && sudo apt upgrade -y && sudo apt install lsb-release pipewire wireplumber pipewire-pulse"'
 
     title="Additional Packages"
     backtitle="Additional Packages for $DISTRO_NAME"
