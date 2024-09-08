@@ -163,7 +163,7 @@ homepage() {
     backtitle="Alpine Linux Interactive Installer"
 
     local -a checkboxes
-    checkboxes+=("Initial Setup" "initial_setup")
+    checkboxes+=("Initial Setup (run if u just did setup-alpine)" "initial_setup")
     checkboxes+=("Pipewire Setup" "pipewire")
     checkboxes+=("LxQt DE" "lxqt")
     checkboxes+=("Distrobox" "distrobox")
