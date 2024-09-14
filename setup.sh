@@ -125,7 +125,7 @@ deb_based() {
     source ./Scripts/Distrobox/deb_based.sh
 
     export DISTRO_NAME=$(echo "$DISTRO" | awk '{for (i=1; i<=NF; i++) $i=toupper(substr($i,1,1)) tolower(substr($i,2)); print}')
-    su $user -c 'distrobox enter $DISTRO -- bash -c "sudo apt update -y && sudo apt upgrade -y && sudo apt install lsb-release pipewire wireplumber pipewire-pulse"'
+    su $user -c 'distrobox enter $DISTRO -- bash -c "sudo apt update -y && sudo apt upgrade -y && sudo apt install lsb-release pipewire wireplumber pipewire-pulse -y"'
 
     title="Additional Packages"
     backtitle="Additional Packages for $DISTRO_NAME"
