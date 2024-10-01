@@ -2,7 +2,7 @@
 
 initial_setup() {
     sed -i -e "/\/$alpineversion\// s/^#//" /etc/apk/repositories
-    apk add doas nano vim sudo neovim btop
+    apk add doas sudo nano vim neovim btop gedit
     adduser $user wheel
     passwd -l root
     apk update

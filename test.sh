@@ -2,6 +2,8 @@
 
 ((indicator = 0))
 
+declare -A command_execute
+
 programchoices() {
     ((indicator+=1))
     choices=()
@@ -18,8 +20,7 @@ programchoices() {
 
     dynamic_choice+="esac"
 
-    declare -g "execute_$indicator=$dynamic_choice"
-    command_execute=execute_$indicator
+    command_execute["$indicator"]="$dynamic_choice"
 }
 
 mainui() {
@@ -29,13 +30,6 @@ mainui() {
     readarray -t picking <<<"$array"
     declare -g "picking_$indicator=${picking[*]}"
     picking_testing=picking_$indicator
-    array_ref=${!picking_testing}
-    count=${#array_ref[*]}
-
-    echo $count
-    echo $array_ref
-
-    sleep 25
 }
 
 command() {
@@ -43,15 +37,11 @@ command() {
     do
         declare -g "pickings_$indicator=${picking[c]}"
         pickings_testing=pickings_$indicator
-
-        echo $pickings_1
-        echo $pickings_2
-        echo "c : $c"
-        echo "total array : ${#picking[@]}"
-        sleep 5
-
-        eval "$(echo -e "${!command_execute}")"
+        
+        eval "$(echo -e "${command_execute[$indicator]}")"
     done
+
+    sleep 5
 }
 
 browser() {
@@ -99,9 +89,15 @@ mainui_ui() {
     checkboxes+=("communication" "communication")
     checkboxes+=("last" "last")
 
-    programchoices && mainui && command
+    programchoices && mainui
 
-    echo testhehe
+    for item in "${picking[@]}"; do
+        case "$item" in
+            1) browser ;;
+            2) communication ;;
+            3) last ;;
+        esac
+    done
 }
 
 mainui_ui

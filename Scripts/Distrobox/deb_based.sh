@@ -58,7 +58,7 @@ com_discord() {
 }
 
 com_simplex() {
-    mkdir /usr/share/desktop-directories/
+    su $user -c 'distrobox enter $DISTRO -- bash -c "sudo mkdir /usr/share/desktop-directories/"'
     wget https://github.com/simplex-chat/simplex-chat/releases/latest/download/simplex-desktop-ubuntu-22_04-x86_64.deb -O /tmp/simplex-chat_install.deb
     su $user -c 'distrobox enter $DISTRO -- bash -c "sudo dpkg -i /tmp/simplex-chat_install.deb"'
     su $user -c 'distrobox enter $DISTRO -- bash -c "sudo apt install -f -y"'
