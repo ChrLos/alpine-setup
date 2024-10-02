@@ -20,10 +20,18 @@ brow_opera() {
     distrobox enter $DISTRO -- bash -c 'echo "deb [signed-by=/usr/share/keyrings/opera-browser.gpg] https://deb.opera.com/opera-stable/ stable non-free" | sudo dd of=/etc/apt/sources.list.d/opera-archive.list'
     distrobox enter $DISTRO -- bash -c 'sudo apt-get update'
     distrobox enter $DISTRO -- bash -c 'sudo apt-get install opera-stable -y'
+    distrobox enter $DISTRO -- distrobox-export --app opera
 EOF
 
     chmod +x /tmp/opera.sh
     su $user -c /tmp/opera.sh
+}
+
+brow_chrome() {
+    wget "https://www.google.com/chrome/next-steps.html?platform=linux&statcb=0&installdataindex=empty&defaultbrowser=0#" -O /tmp/google-chrome_install.deb
+    su $user -c 'distrobox enter $DISTRO -- bash -c "sudo dpkg -i /tmp/google-chrome_install.deb"'
+    su $user -c 'distrobox enter $DISTRO -- bash -c "sudo apt install -f -y"'
+    su $user -c 'distrobox enter $DISTRO -- distrobox-export --app chrome'
 }
 
 brow_mullvad_browser() {

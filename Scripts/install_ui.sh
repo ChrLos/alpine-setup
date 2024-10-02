@@ -9,6 +9,7 @@ check_parent_process() {
     # Get the parent process ID
     parent_pid=$(cat /proc/$$/status | grep -w PPid | awk '{print $2}'    )
 
+
     # Get the parent process name
     parent_process=$(cat /proc/$PPID/comm)
 
@@ -118,6 +119,7 @@ browser() {
     local -a checkboxes
     checkboxes+=("Brave" "brow_brave")
     checkboxes+=("Opera" "brow_opera")
+    checkboxes+=("Chrome Browser" "brow_chrome")
     checkboxes+=("Mullvad Browser" "brow_mullvad_browser")
     checkboxes+=("Tor Browser" "brow_tor_browser")
 
@@ -160,8 +162,7 @@ deb_based() {
         esac
     done
 
-    su $
-    brow_tor_browseruser -c 'distrobox enter $DISTRO -- bash -c "sudo dpkg --configure -a"'
+    su $user -c 'distrobox enter $DISTRO -- bash -c "sudo dpkg --configure -a"'
 }
 
 distbox() {
