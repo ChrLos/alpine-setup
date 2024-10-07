@@ -28,8 +28,8 @@ EOF
 }
 
 brow_chrome() {
-    wget "https://www.google.com/chrome/next-steps.html?platform=linux&statcb=0&installdataindex=empty&defaultbrowser=0#" -O /tmp/google-chrome_install.deb
-    su $user -c 'distrobox enter $DISTRO -- bash -c "sudo dpkg -i /tmp/google-chrome_install.deb"'
+    wget "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb" -O /tmp/google_chrome-install.deb
+    su $user -c 'distrobox enter $DISTRO -- bash -c "sudo dpkg -i /tmp/google_chrome-install.deb"'
     su $user -c 'distrobox enter $DISTRO -- bash -c "sudo apt install -f -y"'
     su $user -c 'distrobox enter $DISTRO -- distrobox-export --app chrome'
 }
@@ -75,6 +75,17 @@ com_simplex() {
 
 # Utilities
 
+util_peazip() {
+    cat > /tmp/peazip.sh << EOF
+    distrobox enter $DISTRO -- bash -c 'sudo curl -s https://api.github.com/repos/peazip/PeaZip/releases/latest | grep "Qt5.*deb" | cut -d : -f 2,3 | tr -d \" | wget -i - -O /tmp/peazip_install.deb'
+    distrobox enter $DISTRO -- bash -c 'sudo dpkg -i /tmp/peazip_install.deb'
+    distrobox enter $DISTRO -- bash -c 'sudo apt install libqt5printsupport5t64 libqt5x11extras5 -y'
+    distrobox enter $DISTRO -- distrobox-export --app peazip
+EOF
+
+    chmod +x /tmp/peazip.sh
+    su $user -c /tmp/peazip.sh
+}
 
 # Others
 
@@ -87,4 +98,31 @@ EOF
 
     chmod +x /tmp/vscode.sh
     su $user -c /tmp/vscode.sh
+
+    # Install VSCode extension by reading the file lines
+    install_extension() {
+        file="/tmp/$file_name"
+        while IFS=$'\n' read -r line
+        do
+            install_line="code --install-extension $line"
+            extension+="${install_line//\\n/ }"
+        done < "$file"
+
+        su $user -c 'distrobox enter $DISTRO -- bash -c "$extension"'
+    }
+
+    # Check if main extension is downloaded yet or not
+    if ! [ $(code --list-extensions | grep -cE 'pkief.material-icon-theme|zhuangtongfa.material-theme|oderwat.indent-rainbow|formulahendry.code-runner|adpyke.codesnap|shd101wyy.markdown-preview-enhanced') -lt 5 ]; then
+    
+        cat > /tmp/main_extension << EOF
+        pkief.material-icon-theme
+        zhuangtongfa.material-theme
+        oderwat.indent-rainbow
+        formulahendry.code-runner
+        shd101wyy.markdown-preview-enhanced
+EOF
+
+        file_name=main_extension
+        install_extension
+    fi
 }

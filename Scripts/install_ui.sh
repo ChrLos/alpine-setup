@@ -9,7 +9,6 @@ check_parent_process() {
     # Get the parent process ID
     parent_pid=$(cat /proc/$$/status | grep -w PPid | awk '{print $2}'    )
 
-
     # Get the parent process name
     parent_process=$(cat /proc/$PPID/comm)
 
@@ -126,6 +125,16 @@ browser() {
     programchoices && mainui && command
 }
 
+utilities() {
+    title="Utilities"
+    backtitle="Utilities to Install"
+
+    local -a checkboxes
+    checkboxes+=("PeaZip" "util_peazip")
+
+    programchoices && mainui && command
+}
+
 communication() {
     title="Communication"
     backtitle="Apps to Communicate"
@@ -133,6 +142,22 @@ communication() {
     local -a checkboxes
     checkboxes+=("Discord" "com_discord")
     checkboxes+=("SimpleX Chat" "com_simplex")
+
+    programchoices && mainui && command
+}
+
+vs_code() {
+    source ./Scripts/Distrobox/vs_code.sh
+
+    vscode
+
+    title="Programming Languange"
+    backtitle="Choose Your Programming Languange"
+
+    local -a checkboxes
+    checkboxes+=("C/C++" "c_or_cpp-lang")
+    checkboxes+=("Python" "python-lang")
+    checkboxes+=("HTML/CSS/JS" "html_css_js-lang")
 
     programchoices && mainui && command
 }
@@ -149,7 +174,8 @@ deb_based() {
     local -a checkboxes
     checkboxes+=("Browser" "browser")
     checkboxes+=("Communication" "communication")
-    checkboxes+=("VsCode" "vscode")
+    checkboxes+=("Utilities" "utilities")
+    checkboxes+=("VsCode" "vs_code")
 
     programchoices && mainui
 
@@ -158,7 +184,8 @@ deb_based() {
         case "$item" in
             1) browser ;;
             2) communication ;;
-            3) vscode ;;
+            3) utilities ;;
+            4) vs_code ;;
         esac
     done
 
@@ -172,7 +199,7 @@ distbox() {
     backtitle="Choose your Distrobox OS"
 
     local -a checkboxes
-    checkboxes+=("Ubuntu" "os_ubuntu")
+    checkboxes+=("Ubuntu (Recommended)" "os_ubuntu")
     checkboxes+=("Debian" "os_debian")
     checkboxes+=("Arch Linux" "os_arch")
 
@@ -200,7 +227,7 @@ homepage() {
     checkboxes+=("Initial Setup (run if u just did setup-alpine)" "initial_setup")
     checkboxes+=("Pipewire Setup" "pipewire")
     checkboxes+=("LxQt DE" "lxqt")
-    checkboxes+=("Distrobox" "distrobox")
+    checkboxes+=("Distrobox (Select for More App Support)" "distrobox")
 
     programchoices && mainui
 
@@ -223,24 +250,3 @@ get_user
 move_location
 homepage
 final_check
-
-# Archived Code
-# root_check() {
-#     if [ `id -u` -ne 0 ]; then
-#         echo "Please run this script as root or use sudo!"
-#         exit
-#     fi
-# }
-
-# get_user() {
-#     # The auto guess_name will need work if there's 2 users, make a dialog to select which user
-#     readarray -t lines < .variables
-#     export user=${lines[0]#\$USER=}
-
-#     if [[ ${lines[0]} != "\$USER="* ]]; then
-#         export user=$(dialog --title "Your user name" --inputbox "Enter your user name:" 10 50 "user" 3>&1 1>&2 2>&3)
-#         if [[ $user != "" ]]; then
-#             echo -e "\$USER=$user" >> .variables
-#         fi
-#     fi
-# }
