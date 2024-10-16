@@ -41,6 +41,7 @@ html_css_js-lang() {
     formulahendry.auto-rename-tag
     ritwickdey.liveserver
     esbenp.prettier-vscode
+    dbaeumer.vscode-eslint
 EOF
 
     file_name=html_css_js-lang
