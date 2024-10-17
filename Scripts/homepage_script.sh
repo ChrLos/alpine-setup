@@ -63,6 +63,6 @@ EOF
         export reboot_value=1
         final_check
     else
-        distbox
+        distbox_os
     fi
 }

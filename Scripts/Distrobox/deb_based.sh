@@ -112,7 +112,7 @@ EOF
     }
 
     # Check if main extension is downloaded yet or not
-    if [ $(distrobox enter $DISTRO -- bash -c "code --list-extensions" | grep -cE 'pkief.material-icon-theme|zhuangtongfa.material-theme|oderwat.indent-rainbow|formulahendry.code-runner|adpyke.codesnap|shd101wyy.markdown-preview-enhanced|yzhang.markdown-all-in-one') -lt 6 ]; then
+    if [ $(su $user -c "distrobox enter $DISTRO -- bash -c \"code --list-extensions\" | grep -cE 'pkief.material-icon-theme|zhuangtongfa.material-theme|oderwat.indent-rainbow|formulahendry.code-runner|adpyke.codesnap|shd101wyy.markdown-preview-enhanced|yzhang.markdown-all-in-one'") -lt 6 ]; then
     
         cat > /tmp/main_extension << EOF
         pkief.material-icon-theme
