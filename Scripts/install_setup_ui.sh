@@ -203,6 +203,7 @@ utilities() {
 
     local -a checkboxes
     checkboxes+=("PeaZip" "util_peazip")
+    checkboxes+=("Master PDF Editor 5" "util_master_pdf_editor5")
 
     programchoices && mainui && command
 }

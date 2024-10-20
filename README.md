@@ -63,7 +63,7 @@ Well it's actually simple
 
     (username) → type your desired name
     
-    (strong password) → type a strong password
+    (strong password) → type a strong password and remember it
   - **How to do setup-alpine**
 
     Type this first in the command

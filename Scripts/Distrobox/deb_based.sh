@@ -29,9 +29,9 @@ EOF
 
 brow_chrome() {
     wget "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb" -O /tmp/google_chrome-install.deb
-    su $user -c 'distrobox enter $DISTRO -- bash -c "sudo dpkg -i /tmp/google_chrome-install.deb"'
-    su $user -c 'distrobox enter $DISTRO -- bash -c "sudo apt install -f -y"'
-    su $user -c 'distrobox enter $DISTRO -- distrobox-export --app chrome'
+    su $user -c "distrobox enter $DISTRO -- bash -c 'sudo dpkg -i /tmp/google_chrome-install.deb'"
+    su $user -c "distrobox enter $DISTRO -- bash -c 'sudo apt install -f -y'"
+    su $user -c "distrobox enter $DISTRO -- distrobox-export --app chrome"
 }
 
 brow_mullvad_browser() {
@@ -60,17 +60,17 @@ EOF
 
 com_discord() {
     wget "https://discord.com/api/download?platform=linux&format=deb" -O /tmp/discord_install.deb
-    su $user -c 'distrobox enter $DISTRO -- bash -c "sudo dpkg -i /tmp/discord_install.deb"'
-    su $user -c 'distrobox enter $DISTRO -- bash -c "sudo apt install -f -y"'
-    su $user -c 'distrobox enter $DISTRO -- distrobox-export --app discord'
+    su $user -c "distrobox enter $DISTRO -- bash -c 'sudo dpkg -i /tmp/discord_install.deb'"
+    su $user -c "distrobox enter $DISTRO -- bash -c 'sudo apt install -f -y'"
+    su $user -c "distrobox enter $DISTRO -- distrobox-export --app discord"
 }
 
 com_simplex() {
-    su $user -c 'distrobox enter $DISTRO -- bash -c "sudo mkdir /usr/share/desktop-directories/"'
+    su $user -c "distrobox enter $DISTRO -- bash -c 'sudo mkdir /usr/share/desktop-directories/'"
     wget https://github.com/simplex-chat/simplex-chat/releases/latest/download/simplex-desktop-ubuntu-22_04-x86_64.deb -O /tmp/simplex-chat_install.deb
-    su $user -c 'distrobox enter $DISTRO -- bash -c "sudo dpkg -i /tmp/simplex-chat_install.deb"'
-    su $user -c 'distrobox enter $DISTRO -- bash -c "sudo apt install -f -y"'
-    su $user -c 'distrobox enter $DISTRO -- distrobox-export --app simplex'
+    su $user -c "distrobox enter $DISTRO -- bash -c 'sudo dpkg -i /tmp/simplex-chat_install.deb'"
+    su $user -c "distrobox enter $DISTRO -- bash -c 'sudo apt install -f -y'"
+    su $user -c "distrobox enter $DISTRO -- distrobox-export --app simplex"
 }
 
 # Utilities
@@ -85,6 +85,19 @@ EOF
 
     chmod +x /tmp/peazip.sh
     su $user -c /tmp/peazip.sh
+}
+
+util_master_pdf_editor5() {
+    cat > /tmp/master-pdf-editor5.sh << EOF
+    distrobox enter $DISTRO -- bash -c 'sudo curl -s https://code-industry.net/get-master-pdf-editor-for-ubuntu/?download | grep "qt5.*deb" | cut -d \" -f 2 | head -1 | wget -i - -O /tmp/master-pdf-editor5_install.deb'
+    distrobox enter $DISTRO -- bash -c 'sudo dpkg -i /tmp/master-pdf-editor5_install.deb'
+    distrobox enter $DISTRO -- bash -c 'sudo apt install -f -y'
+    distrobox enter $DISTRO -- bash -c 'sudo apt install libsane1:amd64 -y'
+    distrobox enter $DISTRO -- distrobox-export --app masterpdfeditor5
+EOF
+
+    chmod +x /tmp/master-pdf-editor5.sh
+    su $user -c /tmp/master-pdf-editor5.sh
 }
 
 # Others
@@ -104,21 +117,22 @@ EOF
         file="/tmp/$file_name"
         while IFS=$'\n' read -r line
         do
-            install_line="code --install-extension $line"
+            install_line="code --install-extension $line "
             extension+="${install_line//\\n/ }"
         done < "$file"
 
-        su $user -c 'distrobox enter $DISTRO -- bash -c "$extension"'
+        su $user -c "distrobox enter $DISTRO -- bash -c '$extension'"
     }
 
     # Check if main extension is downloaded yet or not
-    if [ $(su $user -c "distrobox enter $DISTRO -- bash -c \"code --list-extensions\" | grep -cE 'pkief.material-icon-theme|zhuangtongfa.material-theme|oderwat.indent-rainbow|formulahendry.code-runner|adpyke.codesnap|shd101wyy.markdown-preview-enhanced|yzhang.markdown-all-in-one'") -lt 6 ]; then
+    if [ $(su $user -c "distrobox enter $DISTRO -- bash -c \"code --list-extensions\" | grep -cE 'pkief.material-icon-theme|zhuangtongfa.material-theme|oderwat.indent-rainbow|formulahendry.code-runner|adpyke.codesnap|shd101wyy.markdown-preview-enhanced|yzhang.markdown-all-in-one'") -lt 7 ]; then
     
         cat > /tmp/main_extension << EOF
         pkief.material-icon-theme
         zhuangtongfa.material-theme
         oderwat.indent-rainbow
         formulahendry.code-runner
+        adpyke.codesnap
         shd101wyy.markdown-preview-enhanced
         yzhang.markdown-all-in-one
 EOF

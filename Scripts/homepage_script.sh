@@ -41,7 +41,7 @@ EOF
 }
 
 distrobox() {
-    if ! [ $(apk list --installed | grep -cE 'distrobox|podman|podman-compose') -eq 3 ] && ! [ -f "/etc/local.d/mount-rshared.start" ]; then
+    if [ $(apk list --installed | grep -cE 'distrobox|podman|podman-compose') -lt 3 ] && ! [ -f "/etc/local.d/mount-rshared.start" ]; then
         
         apk add distrobox podman podman-compose
         rc-update add cgroups

@@ -1,0 +1,10 @@
+{
+    // In your settings.json
+    "markdown.extension.toc.omittedFromToc": {
+        // Use a path relative to your workspace.
+        "README.md": [
+            "# Table of Contents",
+            "#### All done!! Now what?",
+        ]
+    }
+}
