@@ -1,11 +1,16 @@
 #!/bin/bash
 
-# Initial Setup
+
+#=======================================================================                                                                      
+#   Initial Setup                                                                                            
+#=======================================================================
 
 export DISTRO_NAME=$(echo "$DISTRO" | awk '{for (i=1; i<=NF; i++) $i=toupper(substr($i,1,1)) tolower(substr($i,2)); print}')
 su $user -c 'distrobox enter $DISTRO -- bash -c "sudo apt update -y && sudo apt upgrade -y && sudo apt install lsb-release pipewire wireplumber pipewire-pulse -y"'
 
-# Browser
+#=======================================================================                                                                      
+#   Browser                                                                                            
+#=======================================================================
 
 brow_brave() {
     cat > /tmp/brave.sh << EOF
@@ -61,7 +66,10 @@ EOF
     su $user -c /tmp/torbrowser.sh
 }
 
-# Communication
+
+#=======================================================================                                                                      
+#   Communication                                                                                            
+#=======================================================================
 
 com_discord() {
     wget "https://discord.com/api/download?platform=linux&format=deb" -O /tmp/discord_install.deb
@@ -78,7 +86,9 @@ com_simplex() {
     su $user -c "distrobox enter $DISTRO -- distrobox-export --app simplex"
 }
 
-# Utilities
+#=======================================================================                                                                      
+#   Utilities                                                                                            
+#=======================================================================
 
 util_peazip() {
     cat > /tmp/peazip.sh << EOF
@@ -105,7 +115,9 @@ EOF
     su $user -c /tmp/master-pdf-editor5.sh
 }
 
-# Others
+#=======================================================================                                                                      
+#   Others                                                                                            
+#=======================================================================
 
 vscode() {
     cat > /tmp/vscode.sh << EOF

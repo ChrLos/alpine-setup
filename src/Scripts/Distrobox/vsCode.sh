@@ -1,4 +1,6 @@
-# Main setup
+#=======================================================================                                                                      
+#   Main setup                                                                                            
+#=======================================================================
 
 # Install VSCode extension by reading the file lines
 install_extension() {
@@ -29,11 +31,15 @@ EOF
     install_extension
 fi
 
-# Theme Choice
+#=======================================================================                                                                      
+#   Theme Choice                                                                                            
+#=======================================================================
 
 
 
-# Programming Languange Choice
+#=======================================================================                                                                      
+#   Programming Languange Choice                                                                                            
+#=======================================================================
 
 c_or_cpp-lang() {
     # Downloading GCC and build package for c

@@ -17,7 +17,6 @@ check_parent_process() {
 }
 
 get_user() {
-    # The auto guess_name will need work if there's 2 users, make a dialog to select which user
     if [[ $(grep -cE /home/ /etc/passwd) -gt 1 ]]; then
         echo "Feature Coming Soon" #Continue pls
     else
