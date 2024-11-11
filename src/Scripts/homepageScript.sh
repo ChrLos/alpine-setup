@@ -1,5 +1,7 @@
 #!/bin/bash
 
+apk update && apk upgrade
+
 initial_setup() {
     sed -i -e "/\/$alpineversion\// s/^#//" /etc/apk/repositories
     apk add doas sudo nano vim neovim btop gedit
@@ -15,7 +17,9 @@ pipewire() {
 
 lxqt() {
     setup-xorg-base
+
     apk add lxqt-desktop lximage-qt obconf-qt pavucontrol-qt arandr screengrab sddm elogind polkit-elogind gvfs udisks2 papirus-icon-theme font-cantarell
+    
     rc-service dbus start
     rc-update add dbus
     setup-devd udev

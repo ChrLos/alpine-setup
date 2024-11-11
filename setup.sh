@@ -7,4 +7,4 @@ if [ `id -u` -ne 0 ]; then
 fi
 
 apk add bash dialog
-./Scripts/install_setup_ui.sh
+./src/installSetupUI.sh

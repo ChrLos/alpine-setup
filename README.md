@@ -21,7 +21,8 @@ Though if you want me to add it to the setup, you can open issues about it.
 
 ## Download the File
 
-First you need to [setup your alpine](#this-is-my-first-time-with-alpine-linux) first
+First you need to [setup your alpine](#this-is-my-first-time-with-alpine-linux)
+
 Next you can clone/download it like this
 
 ```sh
