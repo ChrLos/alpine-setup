@@ -5,3 +5,6 @@
 - [ ]  Automatic VS Code Setup (the setting and auto apply themes, if possible)
 - [ ]  Fix NodeJS auto download not working
 - [ ]  Maybe make another .sh specifically for dynamic UI creation and delete from [dynamicOption.sh](https://github.com/ChrLos/alpine-setup/blob/main/lib/dynamicOption.sh) 
+- [ ]  Add option to install [microsoft font](https://unix.stackexchange.com/questions/438257/how-to-install-microsoft-true-type-font-on-alpine-linux)
+- [ ]  Reboot after linux kernel update (Can't enter distro after update)
+- [ ]  Maybe make back button
