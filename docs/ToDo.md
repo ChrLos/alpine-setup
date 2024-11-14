@@ -1,9 +1,9 @@
+- [x]  Fix NodeJS auto download not working
 - [ ] for get_user() in [checkStart.sh](https://github.com/ChrLos/alpine-setup/blob/main/lib/checkStart.sh) : The auto guess_name will need work if there's 2 users, make a dialog to select which user
 - [ ] Remove Homepage and make them auto instead, or just choose:
   - Minimal Setup (Without pipewire and DE)
   - Full Setup (Functional Normal OS)
 - [ ]  Automatic VS Code Setup (the setting and auto apply themes, if possible)
-- [ ]  Fix NodeJS auto download not working
 - [ ]  Maybe make another .sh specifically for dynamic UI creation and delete from [dynamicOption.sh](https://github.com/ChrLos/alpine-setup/blob/main/lib/dynamicOption.sh) 
 - [ ]  Add option to install [microsoft font](https://unix.stackexchange.com/questions/438257/how-to-install-microsoft-true-type-font-on-alpine-linux)
 - [ ]  Reboot after linux kernel update (Can't enter distro after update)

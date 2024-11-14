@@ -115,9 +115,9 @@ utilities() {
 }
 
 vs_code() {
-    source ./src/Scripts/Distrobox/vsCode.sh
-
     vscode
+
+    source ./src/Scripts/Distrobox/vsCode.sh
 
     title="Programming Languange"
     backtitle="Choose Your Programming Languange"

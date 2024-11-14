@@ -76,7 +76,7 @@ EOF
 html_css_js-lang() {
     # Downloading NodeJS
     su $user -c 'distrobox enter $DISTRO -- bash -c "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash"'
-    su $user -c 'distrobox enter $DISTRO -- bash -c "nvm install 22"'
+    su $user -c 'distrobox enter $DISTRO -- bash -c "source $HOME/$DISTRO/.config/nvm/nvm.sh && nvm install 22"'
     
     # Extensions
     cat > /tmp/html_css_js-lang << EOF
