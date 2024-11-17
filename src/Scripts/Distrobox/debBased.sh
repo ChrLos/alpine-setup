@@ -33,6 +33,8 @@ EOF
     chmod +x /tmp/zenbrowser.sh
     su $user -c /tmp/zenbrowser.sh
 
+    cp /home/$user/App/Zen/browser/chrome/icons/default/default64.png /home/$user/.local/share/icons/zen-browser.png
+
     cat > /home/$user/.local/share/applications/ubuntu-zen-browser.desktop << EOF
 	[Desktop Entry]
     Encoding=UTF-8
@@ -40,8 +42,8 @@ EOF
     Type=Application
     Categories=Network;WebBrowser;
     Terminal=false
-	Exec=bash -c "distrobox enter ubuntu -- /home/$user/App/Zen/zen"
-    Icon=/home/$user/App/Zen/browser/chrome/icons/default/default64.png
+    Exec=bash -c "distrobox enter ubuntu -- /home/$user/App/Zen/zen"
+    Icon=zen-browser.png
 EOF
 }
 
@@ -58,7 +60,7 @@ EOF
 
 brow_vivaldi() {
     cat > /tmp/vivaldi.sh << EOF
-    distrobox enter $DISTRO -- bash -c 'sudo curl -s https://vivaldi.com/download/ | grep -o 'https://[^\"]*amd64.deb' | wget -i - -O /tmp/vivaldi_install.deb'
+    distrobox enter $DISTRO -- bash -c 'sudo curl -s https://vivaldi.com/download/ | grep -o "https://[^"]*amd64.deb" | wget -i - -O /tmp/vivaldi_install.deb'
     distrobox enter $DISTRO -- bash -c 'sudo dpkg -i /tmp/vivaldi_install.deb'
     distrobox enter $DISTRO -- distrobox-export --app vivaldi
 EOF
