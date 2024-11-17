@@ -1,17 +1,12 @@
-#!/bin/bash
-
 export alpineversion=$(cat /etc/alpine-release | cut -d "." -f 1-2 | awk '{print "v"$1}')
 
 check_parent_process() {
-    # Get the parent process ID
-    parent_pid=$(cat /proc/$$/status | grep -w PPid | awk '{print $2}'    )
+    parent_pid=$(cat /proc/$$/status | grep -w PPid | awk '{print $2}')  # Get the parent process ID
 
-    # Get the parent process name
-    parent_process=$(cat /proc/$PPID/comm)
+    parent_process=$(cat /proc/$PPID/comm)  # Get the parent process name
 
-    # Check if the parent process is by 'setup.sh'
     if [ "$parent_process" != "setup.sh" ]; then
-        echo "Exiting: Parent process is not from setup.sh."
+        echo "Exiting: Parent process is not from setup.sh."  # Check if the parent process is by 'setup.sh'
         exit 1
     fi
 }

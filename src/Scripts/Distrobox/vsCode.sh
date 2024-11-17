@@ -43,7 +43,7 @@ fi
 
 c_or_cpp-lang() {
     # Downloading GCC and build package for c
-    su $user -c 'distrobox enter $DISTRO -- bash -c "sudo apt install build-essential gcc g++ -y"'
+    su $user -c "distrobox enter $DISTRO -- bash -c 'sudo apt install build-essential gcc g++ -y'"
 
     # Extensions
     cat > /tmp/c_or_cpp-extension << EOF
@@ -60,7 +60,7 @@ EOF
 }
 
 python-lang() {
-    su $user -c 'distrobox enter $DISTRO -- bash -c "sudo apt install python3 -y"'
+    su $user -c "distrobox enter $DISTRO -- bash -c 'sudo apt install python3 -y'"
 
     # Extensions
     cat > /tmp/python-lang << EOF
@@ -75,8 +75,8 @@ EOF
 
 html_css_js-lang() {
     # Downloading NodeJS
-    su $user -c 'distrobox enter $DISTRO -- bash -c "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash"'
-    su $user -c 'distrobox enter $DISTRO -- bash -c "source $HOME/$DISTRO/.config/nvm/nvm.sh && nvm install 22"'
+    su $user -c "distrobox enter $DISTRO -- bash -c 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash'"
+    su $user -c "distrobox enter $DISTRO -- bash -c 'source $HOME/$DISTRO/.config/nvm/nvm.sh && nvm install 22'"
     
     # Extensions
     cat > /tmp/html_css_js-lang << EOF

@@ -1,5 +1,3 @@
-#!/bin/bash
-
 programchoices() {
     ((i = 0))
     choices=()

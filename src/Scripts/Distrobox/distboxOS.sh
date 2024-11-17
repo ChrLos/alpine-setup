@@ -1,5 +1,3 @@
-#!/bin/bash
-
 os_ubuntu() {
     export DISTRO="ubuntu"
     su $user -c 'yes | distrobox create --name $DISTRO --image ubuntu --home ~/$DISTRO'

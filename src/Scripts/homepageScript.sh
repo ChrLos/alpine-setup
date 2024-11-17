@@ -1,10 +1,8 @@
-#!/bin/bash
-
 apk update && apk upgrade
 
 initial_setup() {
     sed -i -e "/\/$alpineversion\// s/^#//" /etc/apk/repositories
-    apk add doas sudo nano vim neovim btop gedit
+    apk add doas sudo gedit nano vim neovim btop
     adduser $user wheel
     passwd -l root
     apk update
