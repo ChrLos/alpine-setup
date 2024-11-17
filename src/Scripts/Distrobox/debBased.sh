@@ -21,14 +21,19 @@ EOF
 }
 
 brow_zen() {
+    cat > /tmp/zenbrowser.sh << EOF
     mkdir -p /home/$user/App/Zen
     chown -R $user:$user /home/$user/App/Zen
 
-    su $user -c "distrobox enter $DISTRO -- bash -c 'sudo curl -s https://api.github.com/repos/zen-browser/desktop/releases/latest | grep "specific.*tar.bz2" | cut -d : -f 2,3 | tr -d \" | wget -i - -O /tmp/zenbrow.tar.bz2'"
+    distrobox enter $DISTRO -- bash -c 'sudo curl -s https://api.github.com/repos/zen-browser/desktop/releases/latest | grep "specific.*tar.bz2" | cut -d : -f 2,3 | tr -d \" | wget -i - -O /tmp/zenbrowser.tar.bz2'
 
-    tar -xvf /tmp/zenbrow.tar.bz2 zenbrow/* -C /home/$user/App/Zen
+    tar -xvf /tmp/zenbrowser.tar.bz2 zenbrowser/* -C /home/$user/App/Zen
+EOF
 
-    cat > /home/$user/.local/share/applications << EOF
+    chmod +x /tmp/zenbrowser.sh
+    su $user -c /tmp/zenbrowser.sh
+
+    cat > /home/$user/.local/share/applications/ubuntu-zen-browser.desktop << EOF
 	[Desktop Entry]
     Encoding=UTF-8
     Name=Zen Browser
@@ -51,9 +56,11 @@ EOF
 }
 
 brow_vivaldi() {
-    su $user -c "distrobox enter $DISTRO -- bash -c 'sudo curl -s https://vivaldi.com/download/ | grep -o 'https://[^\"]*amd64.deb' | wget -i - -O /tmp/vivaldi_install.deb'"
-    su $user -c "distrobox enter $DISTRO -- bash -c 'sudo dpkg -i /tmp/vivaldi_install.deb'"
-    su $user -c "distrobox enter $DISTRO -- distrobox-export --app vivaldi"
+    cat > /tmp/vivaldi.sh << EOF
+    distrobox enter $DISTRO -- bash -c 'sudo curl -s https://vivaldi.com/download/ | grep -o 'https://[^\"]*amd64.deb' | wget -i - -O /tmp/vivaldi_install.deb'
+    distrobox enter $DISTRO -- bash -c 'sudo dpkg -i /tmp/vivaldi_install.deb'
+    distrobox enter $DISTRO -- distrobox-export --app vivaldi
+EOF
 }
 
 brow_opera() {
