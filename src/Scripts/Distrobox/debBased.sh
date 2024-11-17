@@ -38,6 +38,7 @@ EOF
     Encoding=UTF-8
     Name=Zen Browser
     Type=Application
+    Categories=Network;WebBrowser;
     Terminal=false
 	Exec=bash -c "distrobox enter ubuntu -- /home/$user/App/Zen/zen"
     Icon=/home/$user/App/Zen/browser/chrome/icons/default/default64.png
