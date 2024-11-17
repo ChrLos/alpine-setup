@@ -62,6 +62,9 @@ brow_vivaldi() {
     distrobox enter $DISTRO -- bash -c 'sudo dpkg -i /tmp/vivaldi_install.deb'
     distrobox enter $DISTRO -- distrobox-export --app vivaldi
 EOF
+
+    chmod +x /tmp/vivaldi.sh
+    su $user -c /tmp/vivaldi.sh
 }
 
 brow_opera() {
