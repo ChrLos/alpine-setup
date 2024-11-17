@@ -23,7 +23,7 @@ EOF
 brow_zen() {
     cat > /tmp/zenbrowser.sh << EOF
     mkdir -p /home/$user/App/Zen
-    chown -R $user:$user /home/$user/App/Zen
+    chown -R $user:$user /home/$user/App/
 
     distrobox enter $DISTRO -- bash -c 'sudo curl -s https://api.github.com/repos/zen-browser/desktop/releases/latest | grep "specific.*tar.bz2" | cut -d : -f 2,3 | tr -d \" | wget -i - -O /tmp/zenbrowser.tar.bz2'
 
