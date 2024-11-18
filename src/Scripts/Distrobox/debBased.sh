@@ -60,7 +60,7 @@ EOF
 
 brow_vivaldi() {
     cat > /tmp/vivaldi.sh << EOF
-    distrobox enter $DISTRO -- bash -c 'sudo curl -s https://vivaldi.com/download/ | grep -o "https://[^"]*amd64.deb" | wget -i - -O /tmp/vivaldi_install.deb'
+    distrobox enter $DISTRO -- bash -c 'sudo curl -s https://vivaldi.com/download/ | grep -o "https://[^\"]*amd64.deb" | wget -i - -O /tmp/vivaldi_install.deb'
     distrobox enter $DISTRO -- bash -c 'sudo dpkg -i /tmp/vivaldi_install.deb'
     distrobox enter $DISTRO -- distrobox-export --app vivaldi
 EOF
