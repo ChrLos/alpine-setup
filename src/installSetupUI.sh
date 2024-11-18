@@ -84,9 +84,11 @@ browser() {
 
     local -a checkboxes
     checkboxes+=("Brave" "brow_brave")
+    checkboxes+=("Zen Browser" "brow_zen")
+    checkboxes+=("Mullvad Browser" "brow_mullvad_browser")
+    checkboxes+=("Vivaldi" "brow_vivaldi")
     checkboxes+=("Opera" "brow_opera")
     checkboxes+=("Chrome Browser" "brow_chrome")
-    checkboxes+=("Mullvad Browser" "brow_mullvad_browser")
     checkboxes+=("Tor Browser" "brow_tor_browser")
 
     programchoices && mainui && command

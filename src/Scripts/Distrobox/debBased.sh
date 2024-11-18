@@ -20,6 +20,55 @@ EOF
     su $user -c /tmp/brave.sh
 }
 
+brow_zen() {
+    cat > /tmp/zenbrowser.sh << EOF
+    mkdir -p /home/$user/App/Zen
+    chown -R $user:$user /home/$user/App/
+
+    distrobox enter $DISTRO -- bash -c 'sudo curl -s https://api.github.com/repos/zen-browser/desktop/releases/latest | grep "specific.*tar.bz2" | cut -d : -f 2,3 | tr -d \" | wget -i - -O /tmp/zenbrowser.tar.bz2'
+
+    tar -xvf /tmp/zenbrowser.tar.bz2 -C /home/$user/App/Zen --strip-components 1
+EOF
+
+    chmod +x /tmp/zenbrowser.sh
+    su $user -c /tmp/zenbrowser.sh
+
+    cp /home/$user/App/Zen/browser/chrome/icons/default/default64.png /home/$user/.local/share/icons/zen-browser.png
+
+    cat > /home/$user/.local/share/applications/ubuntu-zen-browser.desktop << EOF
+	[Desktop Entry]
+    Encoding=UTF-8
+    Name=Zen Browser
+    Type=Application
+    Categories=Network;WebBrowser;
+    Terminal=false
+    Exec=bash -c "distrobox enter ubuntu -- /home/$user/App/Zen/zen"
+    Icon=zen-browser.png
+EOF
+}
+
+brow_mullvad_browser() {
+    cat > /tmp/mullvad.sh << EOF
+    #!/bin/bash
+    distrobox enter $DISTRO -- bash -c 'sudo curl -fsSLo /usr/share/keyrings/mullvad-keyring.asc https://repository.mullvad.net/deb/mullvad-keyring.asc && echo "deb [signed-by=/usr/share/keyrings/mullvad-keyring.asc arch=\$( dpkg --print-architecture )] https://repository.mullvad.net/deb/stable \$(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/mullvad.list && sudo apt update && sudo apt install -y mullvad-browser'
+    distrobox enter $DISTRO -- distrobox-export --app mullvad-browser
+EOF
+
+    chmod +x /tmp/mullvad.sh
+    su $user -c /tmp/mullvad.sh
+}
+
+brow_vivaldi() {
+    cat > /tmp/vivaldi.sh << EOF
+    distrobox enter $DISTRO -- bash -c 'sudo curl -s https://vivaldi.com/download/ | grep -o "https://[^\"]*amd64.deb" | wget -i - -O /tmp/vivaldi_install.deb'
+    distrobox enter $DISTRO -- bash -c 'sudo dpkg -i /tmp/vivaldi_install.deb'
+    distrobox enter $DISTRO -- distrobox-export --app vivaldi
+EOF
+
+    chmod +x /tmp/vivaldi.sh
+    su $user -c /tmp/vivaldi.sh
+}
+
 brow_opera() {
     cat > /tmp/opera.sh << EOF
     #!/bin/bash
@@ -39,17 +88,6 @@ brow_chrome() {
     su $user -c "distrobox enter $DISTRO -- bash -c 'sudo dpkg -i /tmp/google_chrome-install.deb'"
     su $user -c "distrobox enter $DISTRO -- bash -c 'sudo apt install -f -y'"
     su $user -c "distrobox enter $DISTRO -- distrobox-export --app chrome"
-}
-
-brow_mullvad_browser() {
-    cat > /tmp/mullvad.sh << EOF
-    #!/bin/bash
-    distrobox enter $DISTRO -- bash -c 'sudo curl -fsSLo /usr/share/keyrings/mullvad-keyring.asc https://repository.mullvad.net/deb/mullvad-keyring.asc && echo "deb [signed-by=/usr/share/keyrings/mullvad-keyring.asc arch=\$( dpkg --print-architecture )] https://repository.mullvad.net/deb/stable \$(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/mullvad.list && sudo apt update && sudo apt install -y mullvad-browser'
-    distrobox enter $DISTRO -- distrobox-export --app mullvad-browser
-EOF
-
-    chmod +x /tmp/mullvad.sh
-    su $user -c /tmp/mullvad.sh
 }
 
 brow_tor_browser() {
