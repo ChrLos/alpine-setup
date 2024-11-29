@@ -36,7 +36,7 @@ EOF
     cp /home/$user/App/Zen/browser/chrome/icons/default/default64.png /home/$user/.local/share/icons/zen-browser.png
 
     cat > /home/$user/.local/share/applications/ubuntu-zen-browser.desktop << EOF
-	[Desktop Entry]
+    [Desktop Entry]
     Encoding=UTF-8
     Name=Zen Browser
     Type=Application
