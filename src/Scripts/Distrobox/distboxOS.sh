@@ -6,11 +6,11 @@ os_ubuntu() {
 
 os_debian() {
     export DISTRO="debian"
-    su $user -c 'distrobox create --name $DISTRO --pull -i quay.io/toolbx-images/debian-toolbox:12 --home ~/$DISTRO'
+    su $user -c 'yes | distrobox create --name $DISTRO --pull -i quay.io/toolbx-images/debian-toolbox:latest --home ~/$DISTRO'
     deb_based
 }
 
 os_arch() {
-    su $user -c 'distrobox create --name aur --pull -i quay.io/toolbx/arch-toolbox:latest --home ~/aur'
+    su $user -c 'yes | distrobox create --name aur --pull -i quay.io/toolbx/arch-toolbox:latest --home ~/aur'
     su $user -c 'distrobox enter aur -- bash -c "sudo -Syu"'
 }
