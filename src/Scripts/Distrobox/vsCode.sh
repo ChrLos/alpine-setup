@@ -1,3 +1,5 @@
+source ./lib/dynamicOption.sh
+
 #=======================================================================                                                                      
 #   Main setup                                                                                            
 #=======================================================================
@@ -35,7 +37,21 @@ fi
 #   Theme Choice                                                                                            
 #=======================================================================
 
+title="VS Code Themes"
+backtitle="Options for VS Code Themes"
 
+local -a checkboxes
+checkboxes+=("Catppuccin")
+checkboxes+=("Dracula")
+checkboxes+=("One Dark Pro")
+checkboxes+=("Tokyo Night")
+
+programchoices && mainui
+
+for theme_choices in "${checkboxes[@]}"
+do
+    su $user -c "distrobox enter $DISTRO -- bash -c '$theme_choices'"
+done
 
 #=======================================================================                                                                      
 #   Programming Languange Choice                                                                                            
