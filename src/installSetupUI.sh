@@ -118,7 +118,8 @@ utilities() {
 
 vs_code() {
     vscode
-
+    vs_code_theme_choices_ui
+    
     source ./src/Scripts/Distrobox/vsCode.sh
 
     title="Programming Languange"
@@ -128,6 +129,21 @@ vs_code() {
     checkboxes+=("C/C++" "c_or_cpp-lang")
     checkboxes+=("Python" "python-lang")
     checkboxes+=("HTML/CSS/JS" "html_css_js-lang")
+
+    programchoices && mainui && command
+}
+
+vs_code_theme_choices_ui() {
+    source ./src/Scripts/Distrobox/vsCode.sh
+
+    title="VS Code Themes"
+    backtitle="Options for VS Code Themes"
+
+    local -a checkboxes
+    checkboxes+=("Catppuccin" "vs_code_theme_choices "catppuccin.catppuccin-vsc"")
+    checkboxes+=("Dracula" "vs_code_theme_choices "dracula-theme.theme-dracula"")
+    checkboxes+=("One Dark Pro" "vs_code_theme_choices "zhuangtongfa.material-theme"")
+    checkboxes+=("Tokyo Night" "vs_code_theme_choices "enkia.tokyo-night"")
 
     programchoices && mainui && command
 }

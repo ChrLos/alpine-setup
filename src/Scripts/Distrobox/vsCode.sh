@@ -15,11 +15,10 @@ install_extension() {
 }
 
 # Check if main extension is downloaded yet or not
-if [ $(su $user -c "distrobox enter $DISTRO -- bash -c \"code --list-extensions\" | grep -cE 'pkief.material-icon-theme|zhuangtongfa.material-theme|oderwat.indent-rainbow|formulahendry.code-runner|adpyke.codesnap|shd101wyy.markdown-preview-enhanced|yzhang.markdown-all-in-one'") -lt 7 ]; then
+if [ $(su $user -c "distrobox enter $DISTRO -- bash -c \"code --list-extensions\" | grep -cE 'pkief.material-icon-theme|oderwat.indent-rainbow|formulahendry.code-runner|adpyke.codesnap|shd101wyy.markdown-preview-enhanced|yzhang.markdown-all-in-one'") -lt 6 ]; then
 
     cat > /tmp/main_extension << EOF
     pkief.material-icon-theme
-    zhuangtongfa.material-theme
     oderwat.indent-rainbow
     formulahendry.code-runner
     adpyke.codesnap
@@ -35,7 +34,9 @@ fi
 #   Theme Choice                                                                                            
 #=======================================================================
 
-
+vs_code_theme_choices() {
+    su $user -c "distrobox enter $DISTRO -- bash -c 'code --install-extension $1'"
+}
 
 #=======================================================================                                                                      
 #   Programming Languange Choice                                                                                            
