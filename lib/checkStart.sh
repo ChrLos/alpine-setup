@@ -1,12 +1,15 @@
 export alpineversion=$(cat /etc/alpine-release | cut -d "." -f 1-2 | awk '{print "v"$1}')
 
 check_parent_process() {
-    parent_pid=$(cat /proc/$$/status | grep -w PPid | awk '{print $2}')  # Get the parent process ID
+    # Get the parent process ID
+    parent_pid=$(cat /proc/$$/status | grep -w PPid | awk '{print $2}')  
 
-    parent_process=$(cat /proc/$PPID/comm)  # Get the parent process name
+    # Get the parent process name
+    parent_process=$(cat /proc/$PPID/comm)
 
+    # Check if the parent process is by 'setup.sh'
     if [ "$parent_process" != "setup.sh" ]; then
-        echo "Exiting: Parent process is not from setup.sh."  # Check if the parent process is by 'setup.sh'
+        echo "Exiting: Parent process is not from setup.sh."
         exit 1
     fi
 }
@@ -22,8 +25,11 @@ get_user() {
 # Turn on the edge release of alpine linux
 edge_releases() {
     if ! [[ $(cat /etc/apk/repositories | grep -cE "^http.*/edge/") -ge 1 ]]; then
-        dialog --title "Edge Releases" --yesno "Do you want Edge releases?\n\nWARNING:PROCEED WITH CAUTION\nThis will turn the lastest release. bugs, errors, or security vulnerabilities can frequently occur" 9 60
+        dialog  --title "Edge Releases" \
+                --yesno "Do you want Edge releases?\n\nWARNING:PROCEED WITH CAUTION\nThis will turn the latest release. bugs, errors, or security vulnerabilities can frequently occur" \
+                9 60
         response=$?
+        
         case $response in
             0)
                 sed -i -e "/\/$alpineversion\// s/^#//" /etc/apk/repositories
@@ -55,7 +61,7 @@ move_location() {
     fi
 }
 
-# For reboot and moving folder to /home
+# Reboot and moving files to /home
 final_check() {
     if [[ $move_loc -eq 1 ]]; then
         rm -rf ../alpine-setup
