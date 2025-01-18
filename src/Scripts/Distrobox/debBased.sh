@@ -127,7 +127,7 @@ com_simplex() {
 
 util_peazip() {
     cat > /tmp/peazip.sh << EOF
-    distrobox enter $DISTRO -- bash -c 'sudo curl -s https://api.github.com/repos/peazip/PeaZip/releases/latest | grep "Qt5.*deb" | cut -d : -f 2,3 | tr -d \" | wget -i - -O /tmp/peazip_install.deb'
+    distrobox enter $DISTRO -- bash -c 'sudo curl -s https://api.github.com/repos/peazip/PeaZip/releases/latest | grep "Qt.*deb" | cut -d : -f 2,3 | tr -d \" | wget -i - -O /tmp/peazip_install.deb'
     distrobox enter $DISTRO -- bash -c 'sudo dpkg -i /tmp/peazip_install.deb'
     distrobox enter $DISTRO -- bash -c 'sudo apt install libqt5printsupport5t64 libqt5x11extras5 -y'
     distrobox enter $DISTRO -- distrobox-export --app peazip
