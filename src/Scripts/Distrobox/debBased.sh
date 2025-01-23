@@ -25,7 +25,7 @@ brow_zen() {
     mkdir -p /home/$user/App/Zen
     chown -R $user:$user /home/$user/App/
 
-    distrobox enter $DISTRO -- bash -c 'sudo curl -s https://api.github.com/repos/zen-browser/desktop/releases/latest | grep "specific.*tar.bz2" | cut -d : -f 2,3 | tr -d \" | wget -i - -O /tmp/zenbrowser.tar.bz2'
+    distrobox enter $DISTRO -- bash -c 'sudo curl -s https://api.github.com/repos/zen-browser/desktop/releases/latest | grep "x86_64.*tar.bz2" | cut -d : -f 2,3 | tr -d \" | wget -i - -O /tmp/zenbrowser.tar.bz2'
 
     tar -xvf /tmp/zenbrowser.tar.bz2 -C /home/$user/App/Zen --strip-components 1
 EOF
@@ -139,7 +139,7 @@ EOF
 
 util_master_pdf_editor5() {
     cat > /tmp/master-pdf-editor5.sh << EOF
-    distrobox enter $DISTRO -- bash -c 'sudo curl -s https://code-industry.net/get-master-pdf-editor-for-ubuntu/?download | grep "qt5.*deb" | cut -d \" -f 2 | head -1 | wget -i - -O /tmp/master-pdf-editor5_install.deb'
+    distrobox enter $DISTRO -- bash -c 'sudo curl -s https://code-industry.net/get-master-pdf-editor-for-ubuntu/?download | grep "qt.*deb" | cut -d \" -f 2 | head -1 | wget -i - -O /tmp/master-pdf-editor5_install.deb'
     distrobox enter $DISTRO -- bash -c 'sudo dpkg -i /tmp/master-pdf-editor5_install.deb'
     distrobox enter $DISTRO -- bash -c 'sudo apt install -f -y'
     distrobox enter $DISTRO -- bash -c 'sudo apt install libsane1:amd64 -y'
