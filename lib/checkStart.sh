@@ -24,6 +24,16 @@ get_user() {
 
 # Turn on the edge release of alpine linux
 edge_releases() {
+    config_file="/home/$user/.alpine_setup_config"
+
+    if [ -f "$config_file" ]; then
+        source $config_file
+    fi
+
+    if [ $DISABLE_EDGE_PROMPT == true ]; then
+        return
+    fi
+
     if ! [[ $(cat /etc/apk/repositories | grep -cE "^http.*/edge/") -ge 1 ]]; then
         dialog  --title "Edge Releases" \
                 --yesno "Do you want Edge releases?\n\nWARNING:PROCEED WITH CAUTION\nThis will turn the latest release. bugs, errors, or security vulnerabilities can frequently occur" \
@@ -35,6 +45,9 @@ edge_releases() {
                 sed -i -e "/\/$alpineversion\// s/^#//" /etc/apk/repositories
                 sed -i -e "s/http:/https:/g" /etc/apk/repositories
                 sed -i -e "s/$alpineversion/edge/g" /etc/apk/repositories
+                ;;
+            1)
+                su $user -c "echo "DISABLE_EDGE_PROMPT=true" > "$config_file""
                 ;;
             255)
                 exit

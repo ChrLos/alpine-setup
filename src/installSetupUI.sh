@@ -149,8 +149,8 @@ vs_code_theme_choices_ui() {
 }
 
 check_parent_process
-edge_releases
 get_user
+edge_releases
 move_location
 homepage_script
 final_check
