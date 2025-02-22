@@ -4,28 +4,28 @@ source ./lib/checkStart.sh
 source ./lib/dynamicOption.sh
 
 homepage_script() {
-    source ./src/Scripts/homepageScript.sh
-
     title="Alpine Setup"
     backtitle="Alpine Linux Interactive Installer"
 
     local -a checkboxes
-    checkboxes+=("Initial Setup (run if u just did setup-alpine)" "initial_setup")
-    checkboxes+=("Pipewire Setup" "pipewire")
-    checkboxes+=("LxQt DE" "lxqt")
-    checkboxes+=("Distrobox (Select for More App Support)" "distrobox")
+    checkboxes+=("Desktop Environtment" "de_ui_options")
+    checkboxes+=("Minimal" "exit")
 
-    programchoices && mainui
+    programchoices && mainui && command
+}
 
-    for item in "${selected_choice[@]}"
-    do
-        case "$item" in
-            1) initial_setup ;;
-            2) pipewire ;;
-            3) lxqt ;;
-            4) distrobox;;
-        esac
-    done
+de_ui_options() {
+    source ./src/Scripts/homepageScript.sh
+
+    de_initial_setup
+
+    title="Desktop Environtment"
+    backtitle="Desktop Environtment Options"
+
+    local -a checkboxes
+    checkboxes+=("LXQT" "lxqt")
+
+    programchoices && mainui && command
 }
 
 distbox_os() {
@@ -150,6 +150,7 @@ vs_code_theme_choices_ui() {
 
 check_parent_process
 get_user
+initial_setup
 edge_releases
 move_location
 homepage_script
