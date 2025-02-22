@@ -1,14 +1,10 @@
 apk update && apk upgrade
 
-initial_setup() {
-    sed -i -e "/\/$alpineversion\// s/^#//" /etc/apk/repositories
+de_initial_setup() {
+    # Installing common packages
     apk add doas sudo gedit nano vim neovim btop
-    adduser $user wheel
-    passwd -l root
-    apk update
-}
-
-pipewire() {
+    
+    # Pipewire setup
     addgroup $user audio
     apk add pipewire wireplumber pipewire-pulse
 }

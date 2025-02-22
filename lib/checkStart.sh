@@ -1,5 +1,20 @@
 export alpineversion=$(cat /etc/alpine-release | cut -d "." -f 1-2 | awk '{print "v"$1}')
 
+initial_setup() {
+    # if groups $user | grep -q "wheel"; then
+    #     return
+    # fi
+
+    if grep -q "^root:!" /etc/shadow; then
+        return
+    fi
+
+    sed -i -e "/\/$alpineversion\// s/^#//" /etc/apk/repositories
+    adduser $user wheel
+    passwd -l root
+    apk update
+}
+
 check_parent_process() {
     # Get the parent process ID
     parent_pid=$(cat /proc/$$/status | grep -w PPid | awk '{print $2}')  
