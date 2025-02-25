@@ -1,10 +1,6 @@
 export alpineversion=$(cat /etc/alpine-release | cut -d "." -f 1-2 | awk '{print "v"$1}')
 
 initial_setup() {
-    # if groups $user | grep -q "wheel"; then
-    #     return
-    # fi
-
     if grep -q "^root:!" /etc/shadow; then
         return
     fi

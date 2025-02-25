@@ -26,6 +26,8 @@ de_ui_options() {
     checkboxes+=("LXQT" "lxqt")
 
     programchoices && mainui && command
+
+    distrobox
 }
 
 distbox_os() {
