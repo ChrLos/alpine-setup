@@ -6,6 +6,7 @@ source ./lib/dynamicOption.sh
 homepage_script() {
     title="Alpine Setup"
     backtitle="Alpine Linux Interactive Installer"
+    option_mode="single choice"
 
     local -a checkboxes
     checkboxes+=("Desktop Environtment" "de_ui_options")
@@ -21,6 +22,7 @@ de_ui_options() {
 
     title="Desktop Environtment"
     backtitle="Desktop Environtment Options"
+    option_mode="multi choice"
 
     local -a checkboxes
     checkboxes+=("LXQT" "lxqt")
@@ -35,6 +37,7 @@ distbox_os() {
 
     title="Distrobox OS"
     backtitle="Choose your Distrobox OS"
+    option_mode="multi choice"
 
     local -a checkboxes
     checkboxes+=("Ubuntu (Recommended)" "os_ubuntu")
@@ -58,6 +61,7 @@ deb_based() {
 
     title="Additional Packages"
     backtitle="Additional Packages for $DISTRO_NAME"
+    option_mode="multi choice"
 
     local -a checkboxes
     checkboxes+=("Browser" "browser")
@@ -83,6 +87,7 @@ deb_based() {
 browser() {
     title="Browser"
     backtitle="Browser to Install"
+    option_mode="multi choice"
 
     local -a checkboxes
     checkboxes+=("Brave" "brow_brave")
@@ -139,7 +144,7 @@ vs_code_theme_choices_ui() {
     source ./src/Scripts/Distrobox/vsCode.sh
 
     title="VS Code Themes"
-    backtitle="Options for VS Code Themes"
+    backtitle="s for VS Code Themes"
 
     local -a checkboxes
     checkboxes+=("Catppuccin" "vs_code_theme_choices "catppuccin.catppuccin-vsc"")
