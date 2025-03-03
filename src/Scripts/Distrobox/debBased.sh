@@ -27,7 +27,7 @@ brow_zen() {
 
     distrobox enter $DISTRO -- bash -c 'sudo curl -s https://api.github.com/repos/zen-browser/desktop/releases/latest | grep "x86_64.*tar" | cut -d : -f 2,3 | tr -d \" | wget -i - -O /tmp/zenbrowser.tar.xz'
 
-    tar -xvf /tmp/zenbrowser.tar.xz -C /home/$user/App/Zen --strip-components 1
+    distrobox enter $DISTRO -- bash -c 'tar -xvf /tmp/zenbrowser.tar.xz -C /home/$user/App/Zen --strip-components 1'
 EOF
 
     chmod +x /tmp/zenbrowser.sh
