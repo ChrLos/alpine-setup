@@ -1,4 +1,31 @@
+determine_option_mode() {
+    case $option_mode in
+        "multi choice")
+            export dialog_type='--separate-output --checklist'
+            switches="OFF"
+            ;;
+
+        "single choice")
+            export dialog_type='--menu'
+            switches=""
+            ;;
+
+        "y/n")
+            export dialog_type='--yesno'
+            switches=""
+            ;;
+
+        *)
+            echo "No Variables Specified"
+            sleep 20
+            exit 1
+            ;;
+    esac
+}
+
 programchoices() {
+    determine_option_mode
+    
     ((i = 0))
     checkboxes_generator=()
     command_to_execute=()
@@ -8,7 +35,7 @@ programchoices() {
     for ((counter = 0; counter < ${#checkboxes[@]}; counter+=2))
     do
         ((i+=1))
-        checkboxes_generator+=("${i}" "${checkboxes[counter]}" "OFF")
+        checkboxes_generator+=("${i}" "${checkboxes[counter]}" $switches)
         command_to_execute+="${i})\n${checkboxes[counter+1]}\n;;\n"
     done
 
@@ -18,10 +45,9 @@ programchoices() {
 # Creating the dialog UI along with the choices
 mainui() {
     cmd=(
-        dialog --separate-output \
-                --title "$title" \
+        dialog  --title "$title" \
                 --backtitle "$backtitle" \
-                --checklist "Select options:" \
+                $dialog_type "Select options:" \
         15 65 5
     )
 
