@@ -144,7 +144,7 @@ vs_code_theme_choices_ui() {
     source ./src/Scripts/Distrobox/vsCode.sh
 
     title="VS Code Themes"
-    backtitle="s for VS Code Themes"
+    backtitle="Options for VS Code Themes"
 
     local -a checkboxes
     checkboxes+=("Catppuccin" "vs_code_theme_choices "catppuccin.catppuccin-vsc"")
