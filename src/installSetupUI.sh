@@ -1,9 +1,11 @@
 #!/bin/bash
 
-source ./lib/checkStart.sh
+source ./src/scripts/checkStart.sh
 source ./lib/dynamicOption.sh
 
 homepage_script() {
+    source ./src/scripts/homepage/homepageScript.sh
+
     title="Alpine Setup"
     backtitle="Alpine Linux Interactive Installer"
     option_mode="single choice"
@@ -33,7 +35,7 @@ de_ui_options() {
 }
 
 distbox_os() {
-    source ./src/Scripts/Distrobox/distboxOS.sh
+    source ./src/scripts/distrobox/distboxOS.sh
 
     title="Distrobox OS"
     backtitle="Choose your Distrobox OS"
@@ -57,7 +59,7 @@ distbox_os() {
 }
 
 deb_based() {
-    source ./src/Scripts/Distrobox/debBased.sh
+    source ./src/scripts/distrobox/debBased.sh
 
     title="Additional Packages"
     backtitle="Additional Packages for $DISTRO_NAME"
@@ -127,7 +129,7 @@ vs_code() {
     vscode
     vs_code_theme_choices_ui
     
-    source ./src/Scripts/Distrobox/vsCode.sh
+    source ./src/scripts/distrobox/vsCode.sh
 
     title="Programming Languange"
     backtitle="Choose Your Programming Languange"
@@ -141,7 +143,7 @@ vs_code() {
 }
 
 vs_code_theme_choices_ui() {
-    source ./src/Scripts/Distrobox/vsCode.sh
+    source ./src/scripts/distrobox/vsCode.sh
 
     title="VS Code Themes"
     backtitle="Options for VS Code Themes"
