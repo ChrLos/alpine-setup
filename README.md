@@ -9,6 +9,11 @@
 
 # Alpine Linux Setup
 
+⚠️ **Project Not Longer Maintained**
+
+The project is no longer maintained and archived for future reference
+But functionally it still works as intended
+
 ## About
 
 This is a script to help you set up alpine linux, it does soo many things!!
